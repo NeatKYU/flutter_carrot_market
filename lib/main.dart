@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:beamer/beamer.dart';
+import 'package:carrot_market_by_flutter/router/locations.dart';
 import 'package:carrot_market_by_flutter/screens/base_screen.dart';
 import 'package:carrot_market_by_flutter/screens/splash_screen.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
@@ -8,6 +10,12 @@ void main() {
   runApp(MyApp());
 }
 
+final _routeDelegate = BeamerDelegate(
+  locationBuilder: BeamerLocationBuilder(
+    beamLocations: [HomeLocation()],
+  ),
+);
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -15,7 +23,7 @@ class MyApp extends StatelessWidget {
     if (snapshot.hasError) {
       return BaseScreen(stateValue: 'error');
     } else if (snapshot.hasData) {
-      return BaseScreen(stateValue: 'success');
+      return Router();
     } else {
       return const SplashScreen();
     }
@@ -39,3 +47,16 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class Router extends StatelessWidget {
+  const Router({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routeInformationParser: BeamerParser(),
+      routerDelegate: _routeDelegate,
+    );
+  }
+}
+
