@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,19 @@ class AddressPage extends StatelessWidget {
               ),
             ],
           ),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Icon(Icons.image),
+                  trailing: ExtendedImage.asset('assets/images/pos.png'),
+                  title: Text('address $index'),
+                  subtitle: Text('subtitle $index'),
+                );
+              },
+              itemCount: 30,
+            ),
+          )
         ],
       ),
     );
