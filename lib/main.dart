@@ -51,6 +51,7 @@ class Router extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
         fontFamily: 'DoHyeon',
+        hintColor: Colors.grey,
         textTheme: TextTheme(
           button: TextStyle(color: Colors.white),
         ),

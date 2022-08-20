@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+
+class AddressPage extends StatelessWidget {
+  const AddressPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      // safearea에 있는 padding기능?
+      minimum: EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextFormField(
+            // icon은 inputdecoration에 있는 icon을 사용
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
+              hintText: '도로명으로 검색',
+              hintStyle: TextStyle(color: Theme.of(context).hintColor),
+              // 아이콘의 간격 설정?
+              prefixIconConstraints: BoxConstraints(
+                minWidth: 24,
+                minHeight: 24,
+              ),
+              // textformField의 밑줄 설정
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.lightBlue),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
