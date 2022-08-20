@@ -50,7 +50,10 @@ class Router extends StatelessWidget {
     return MaterialApp.router(
       theme: ThemeData(
         primarySwatch: Colors.green,
-        
+        fontFamily: 'DoHyeon',
+        textTheme: TextTheme(
+          button: TextStyle(color: Colors.white),
+        ),
       ),
       routeInformationProvider: _router.routeInformationProvider,
       routeInformationParser: _router.routeInformationParser,
