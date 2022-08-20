@@ -20,7 +20,6 @@ class IntroPage extends StatelessWidget {
               '고기 마켓',
               style: TextStyle(
                 fontSize: 30,
-                color: Colors.blueGrey,
               ),
             ),
             Container(child: ExtendedImage.asset('assets/images/map.jpeg')),
@@ -34,15 +33,7 @@ class IntroPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: pressButton,
-                  child: Text(
-                    '내 동네 설정하고 시작하기',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
-                  ),
+                  child: Text('내 동네 설정하고 시작하기'),
                 ),
               ],
             ),
