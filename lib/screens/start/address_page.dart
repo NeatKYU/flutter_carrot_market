@@ -9,7 +9,7 @@ class AddressPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       // safearea에 있는 padding기능?
-      minimum: EdgeInsets.all(16.0),
+      minimum: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         children: [
           TextFormField(
@@ -27,12 +27,8 @@ class AddressPage extends StatelessWidget {
                 minHeight: 24,
               ),
               // textformField의 밑줄 설정
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.lightBlue),
-              ),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
             ),
           ),
           Column(
@@ -45,6 +41,7 @@ class AddressPage extends StatelessWidget {
                 ),
                 style: TextButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
+                  minimumSize: Size(10, 48),
                 ),
                 onPressed: () {},
                 label: Text(
@@ -56,6 +53,7 @@ class AddressPage extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: Icon(Icons.image),
