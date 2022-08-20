@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:beamer/beamer.dart';
-import 'package:carrot_market_by_flutter/router/locations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/screens/base_screen.dart';
 import 'package:carrot_market_by_flutter/screens/splash_screen.dart';
+import 'package:carrot_market_by_flutter/screens/auth_screen.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 
 void main() {
   logger.d('this is logger debug!!');
   runApp(MyApp());
 }
-
-final _routeDelegate = BeamerDelegate(
-  locationBuilder: BeamerLocationBuilder(
-    beamLocations: [HomeLocation()],
-  ),
-);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -54,9 +48,45 @@ class Router extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routeInformationParser: BeamerParser(),
-      routerDelegate: _routeDelegate,
+      routeInformationProvider: _router.routeInformationProvider,
+      routeInformationParser: _router.routeInformationParser,
+      routerDelegate: _router.routerDelegate,
+      title: 'GoRouter Example',
     );
   }
 }
 
+var _checkValue = false;
+
+final GoRouter _router = GoRouter(
+  routes: <GoRoute>[
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return AuthScreen();
+      },
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (BuildContext context, GoRouterState state) {
+        return BaseScreen(
+          stateValue: 'home page',
+        );
+      },
+    ),
+    // GoRoute(
+    //   path: '/b',
+    //   builder: (BuildContext context, GoRouterState state) {
+    //     return ScreenB();
+    //   },
+    // ),
+  ],
+  redirect: (GoRouterState state) {
+    // if (_checkValue) return '/';
+    // if (!_checkValue) {
+    //   _checkValue = true;
+    //   return '/login';
+    // }
+    return null;
+  },
+);
