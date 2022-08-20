@@ -22,7 +22,18 @@ class IntroPage extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
-            Container(child: ExtendedImage.asset('assets/images/map.jpeg')),
+            Stack(
+              children: [
+                ExtendedImage.asset('assets/images/map.jpeg'),
+                Positioned(
+                  left: 50,
+                  right: 50,
+                  top: 50,
+                  bottom: 50,
+                  child: Icon(Icons.location_pin, size: 50),
+                ),
+              ],
+            ),
             const Text(
               '우리 동네 중고 직거래 고기 마켓',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
