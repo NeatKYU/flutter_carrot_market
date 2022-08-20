@@ -4,9 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class IntroPage extends StatelessWidget {
-  const IntroPage({Key? key}) : super(key: key);
-
-  void pressButton() => {logger.d('click button!')};
+  PageController controller;
+  IntroPage(this.controller, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,14 @@ class IntroPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextButton(
-                      onPressed: pressButton,
+                      onPressed: () {
+                        controller.animateToPage(
+                          1,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.ease,
+                        );
+                        logger.d('click button');
+                      },
                       child: Text(
                         '내 동네 설정하고 시작하기',
                         style: Theme.of(context).textTheme.button,
