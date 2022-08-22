@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carrot_market_by_flutter/screens/start/intro_page.dart';
 import 'package:carrot_market_by_flutter/screens/start/address_page.dart';
+import 'package:carrot_market_by_flutter/screens/start/auth_page.dart';
 
 class AuthScreen extends StatelessWidget {
   AuthScreen({Key? key}) : super(key: key);
@@ -20,9 +21,7 @@ class AuthScreen extends StatelessWidget {
             child: IntroPage(_paegViewContorler),
           ),
           AddressPage(),
-          Container(
-            color: Colors.accents[5],
-          )
+          AuthPage(),
         ],
       ),
     );

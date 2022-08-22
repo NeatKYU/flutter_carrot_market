@@ -55,6 +55,15 @@ class Router extends StatelessWidget {
         textTheme: TextTheme(
           button: TextStyle(color: Colors.white),
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          elevation: 2,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontFamily: 'DoHyeon',
+            color: Colors.black,
+          ),
+        ),
       ),
       routeInformationProvider: _router.routeInformationProvider,
       routeInformationParser: _router.routeInformationParser,
