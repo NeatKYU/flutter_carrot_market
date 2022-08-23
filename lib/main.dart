@@ -55,6 +55,13 @@ class Router extends StatelessWidget {
         textTheme: TextTheme(
           button: TextStyle(color: Colors.white),
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.green,
+            // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
+            primary: Colors.white,
+          ),
+        ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           elevation: 2,
