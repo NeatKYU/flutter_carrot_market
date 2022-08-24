@@ -38,6 +38,7 @@ dependencies:
   logger: ^1.1.0
   go_router: ^4.2.8
   flutter_multi_formatter: ^2.6.1
+  provider: ^6.0.0
 
 dev_dependencies:
   flutter_test:

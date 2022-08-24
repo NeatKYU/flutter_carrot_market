@@ -1,9 +1,11 @@
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/screens/base_screen.dart';
 import 'package:carrot_market_by_flutter/screens/splash_screen.dart';
 import 'package:carrot_market_by_flutter/screens/auth_screen.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   logger.d('this is logger debug!!');
@@ -47,35 +49,40 @@ class Router extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        fontFamily: 'DoHyeon',
-        hintColor: Colors.grey,
-        textTheme: TextTheme(
-          button: TextStyle(color: Colors.white),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.green,
-            // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
-            primary: Colors.white,
+    return ChangeNotifierProvider<UserProvider>(
+      create: (context) {
+        return UserProvider();
+      },
+      child: MaterialApp.router(
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+          fontFamily: 'DoHyeon',
+          hintColor: Colors.grey,
+          textTheme: TextTheme(
+            button: TextStyle(color: Colors.white),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.green,
+              // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
+              primary: Colors.white,
+            ),
+          ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            elevation: 2,
+            titleTextStyle: TextStyle(
+              fontSize: 20,
+              fontFamily: 'DoHyeon',
+              color: Colors.black,
+            ),
           ),
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white,
-          elevation: 2,
-          titleTextStyle: TextStyle(
-            fontSize: 20,
-            fontFamily: 'DoHyeon',
-            color: Colors.black,
-          ),
-        ),
+        routeInformationProvider: _router.routeInformationProvider,
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
+        title: 'GoRouter Example',
       ),
-      routeInformationProvider: _router.routeInformationProvider,
-      routeInformationParser: _router.routeInformationParser,
-      routerDelegate: _router.routerDelegate,
-      title: 'GoRouter Example',
     );
   }
 }
