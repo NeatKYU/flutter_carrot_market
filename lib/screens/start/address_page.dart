@@ -1,10 +1,21 @@
+import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carrot_market_by_flutter/api/address_service.dart';
+import 'package:carrot_market_by_flutter/model/address/address.dart';
 
-class AddressPage extends StatelessWidget {
+class AddressPage extends StatefulWidget {
   const AddressPage({Key? key}) : super(key: key);
+
+  @override
+  State<AddressPage> createState() => _AddressPageState();
+}
+
+class _AddressPageState extends State<AddressPage> {
+  TextEditingController _addressController = TextEditingController();
+
+  Address? _addressModel;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +25,11 @@ class AddressPage extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            controller: _addressController,
+            onFieldSubmitted: (keyword) async {
+              _addressModel = await AddressService().getAddress(keyword);
+              setState(() {});
+            },
             // icon은 inputdecoration에 있는 icon을 사용
             decoration: InputDecoration(
               prefixIcon: Icon(
@@ -45,7 +61,10 @@ class AddressPage extends StatelessWidget {
                   minimumSize: Size(10, 48),
                 ),
                 onPressed: () {
-                  AddressService().getAddress('영등포');
+                  // final keyword = _addressController.text;
+                  // if (keyword.isNotEmpty) {
+                  //   AddressService().getAddress(keyword);
+                  // }
                 },
                 label: Text(
                   '현재위치로 찾기',
@@ -58,14 +77,27 @@ class AddressPage extends StatelessWidget {
             child: ListView.builder(
               padding: EdgeInsets.symmetric(vertical: 16.0),
               itemBuilder: (context, index) {
+                if (_addressModel == null ||
+                    _addressModel!.results == null ||
+                    _addressModel!.results!.juso == null ||
+                    _addressModel!.results!.juso![index].roadAddr == null) {
+                  return Container();
+                }
+                logger.d('list view = ${_addressModel!.results}');
                 return ListTile(
                   leading: Icon(Icons.image),
                   trailing: ExtendedImage.asset('assets/images/pos.png'),
-                  title: Text('address $index'),
+                  // title: Text('address $index'),
+                  title:
+                      Text(_addressModel!.results!.juso![index].roadAddr ?? ''),
                   subtitle: Text('subtitle $index'),
                 );
               },
-              itemCount: 30,
+              itemCount: (_addressModel == null ||
+                      _addressModel!.results == null ||
+                      _addressModel!.results!.juso == null)
+                  ? 0
+                  : _addressModel!.results!.juso!.length,
             ),
           )
         ],
