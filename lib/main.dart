@@ -6,6 +6,7 @@ import 'package:carrot_market_by_flutter/screens/auth_screen.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
+import 'package:carrot_market_by_flutter/screens/home_scren.dart';
 
 void main() {
   logger.d('this is logger debug!!');
@@ -76,6 +77,7 @@ class Router extends StatelessWidget {
                 fontFamily: 'DoHyeon',
                 color: Colors.black,
               ),
+              actionsIconTheme: IconThemeData(color: Colors.black),
             ),
           ),
           routeInformationProvider: _router.routeInformationProvider,
@@ -90,15 +92,14 @@ class Router extends StatelessWidget {
       GoRoute(
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
-          return BaseScreen(
-            stateValue: 'home page',
-          );
+          return HomeScreen();
         },
       ),
       GoRoute(
         path: '/login',
         builder: (BuildContext context, GoRouterState state) {
-          logger.d('context loggedIn = ${context.watch<UserProvider>().loggedIn}');
+          logger.d(
+              'context loggedIn = ${context.watch<UserProvider>().loggedIn}');
           return AuthScreen();
         },
       ),
@@ -107,7 +108,6 @@ class Router extends StatelessWidget {
       // 여기서 provider를 사용하기 위해 router를 provider변수와 같은 레벨에 위치시킴
       // if the user is not logged in, they need to login
       final loggedIn = userState.loggedIn;
-      logger.d('loggedIn ${loggedIn}');
       // 로그인 하려는 중인가?
       final loggingIn = state.subloc == '/login';
       if (!loggedIn) return loggingIn ? null : '/login';
