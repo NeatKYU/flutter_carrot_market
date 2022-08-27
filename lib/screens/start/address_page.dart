@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carrot_market_by_flutter/api/address_service.dart';
 
 class AddressPage extends StatelessWidget {
   const AddressPage({Key? key}) : super(key: key);
@@ -43,7 +44,9 @@ class AddressPage extends StatelessWidget {
                   backgroundColor: Theme.of(context).primaryColor,
                   minimumSize: Size(10, 48),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  AddressService().getAddress('영등포');
+                },
                 label: Text(
                   '현재위치로 찾기',
                   style: Theme.of(context).textTheme.button,
