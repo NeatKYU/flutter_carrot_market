@@ -10,5 +10,5 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get userState => _userLoggedIn;
+  bool get loggedIn => _userLoggedIn;
 }

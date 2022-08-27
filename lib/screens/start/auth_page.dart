@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
@@ -38,6 +39,8 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
+  final user = UserProvider();
+
   void changeVerify() async {
     setState(() {
       _verifyStatus = VerifyStatus.verifying;
@@ -48,6 +51,8 @@ class _AuthPageState extends State<AuthPage> {
     setState(() {
       _verifyStatus = VerifyStatus.done;
     });
+
+    user.setUserAuth(true);
   }
 
   @override
@@ -165,7 +170,11 @@ class _AuthPageState extends State<AuthPage> {
                             onPressed: () {
                               changeVerify();
                             },
-                            child: (_verifyStatus == VerifyStatus.verifying) ? CircularProgressIndicator(color: Colors.white,) : Text('인증번호 확인'),
+                            child: (_verifyStatus == VerifyStatus.verifying)
+                                ? CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text('인증번호 확인'),
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size.fromHeight(50),
                             )),

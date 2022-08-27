@@ -1,4 +1,3 @@
-import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/screens/base_screen.dart';
@@ -6,6 +5,7 @@ import 'package:carrot_market_by_flutter/screens/splash_screen.dart';
 import 'package:carrot_market_by_flutter/screens/auth_screen.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 
 void main() {
   logger.d('this is logger debug!!');
@@ -45,79 +45,77 @@ class MyApp extends StatelessWidget {
 }
 
 class Router extends StatelessWidget {
-  const Router({Key? key}) : super(key: key);
+  Router({Key? key}) : super(key: key);
+
+  final userState = UserProvider();
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UserProvider>(
-      create: (context) {
-        return UserProvider();
-      },
-      child: MaterialApp.router(
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          fontFamily: 'DoHyeon',
-          hintColor: Colors.grey,
-          textTheme: TextTheme(
-            button: TextStyle(color: Colors.white),
-          ),
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.green,
-              // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
-              primary: Colors.white,
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<UserProvider>.value(
+        value: userState,
+        child: MaterialApp.router(
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            fontFamily: 'DoHyeon',
+            hintColor: Colors.grey,
+            textTheme: TextTheme(
+              button: TextStyle(color: Colors.white),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+                // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
+                primary: Colors.white,
+              ),
+            ),
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              titleTextStyle: TextStyle(
+                fontSize: 20,
+                fontFamily: 'DoHyeon',
+                color: Colors.black,
+              ),
             ),
           ),
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
-            elevation: 2,
-            titleTextStyle: TextStyle(
-              fontSize: 20,
-              fontFamily: 'DoHyeon',
-              color: Colors.black,
-            ),
-          ),
+          routeInformationProvider: _router.routeInformationProvider,
+          routeInformationParser: _router.routeInformationParser,
+          routerDelegate: _router.routerDelegate,
+          title: 'GoRouter Example',
         ),
-        routeInformationProvider: _router.routeInformationProvider,
-        routeInformationParser: _router.routeInformationParser,
-        routerDelegate: _router.routerDelegate,
-        title: 'GoRouter Example',
+      );
+
+  late final GoRouter _router = GoRouter(
+    routes: <GoRoute>[
+      GoRoute(
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) {
+          return AuthScreen();
+        },
       ),
-    );
-  }
+      GoRoute(
+        path: '/login',
+        builder: (BuildContext context, GoRouterState state) {
+          return BaseScreen(
+            stateValue: 'home page',
+          );
+        },
+      ),
+    ],
+    redirect: (GoRouterState state) {
+      // 여기서 provider를 사용하기 위해 router를 provider변수와 같은 레벨에 위치시킴
+      // if the user is not logged in, they need to login
+      final loggedIn = userState.loggedIn;
+      // 로그인 하려는 중인가?
+      final loggingIn = state.subloc == '/login';
+      if (!loggedIn) return loggingIn ? null : '/login';
+
+      // if the user is logged in but still on the login page, send them to
+      // the home page
+      if (loggingIn) return '/';
+
+      return null;
+    },
+    refreshListenable: userState,
+  );
 }
-
-var _checkValue = false;
-
-final GoRouter _router = GoRouter(
-  routes: <GoRoute>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return AuthScreen();
-      },
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return BaseScreen(
-          stateValue: 'home page',
-        );
-      },
-    ),
-    // GoRoute(
-    //   path: '/b',
-    //   builder: (BuildContext context, GoRouterState state) {
-    //     return ScreenB();
-    //   },
-    // ),
-  ],
-  redirect: (GoRouterState state) {
-    // if (_checkValue) return '/';
-    // if (!_checkValue) {
-    //   _checkValue = true;
-    //   return '/login';
-    // }
-    return null;
-  },
-);
