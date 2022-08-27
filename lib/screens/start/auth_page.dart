@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 enum VerifyStatus { none, codeSent, verifying, done }
 
@@ -39,20 +41,19 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
-  final user = UserProvider();
-
-  void changeVerify() async {
+  void changeVerify(BuildContext context) async {
     setState(() {
       _verifyStatus = VerifyStatus.verifying;
     });
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
 
     setState(() {
       _verifyStatus = VerifyStatus.done;
     });
 
-    user.setUserAuth(true);
+    context.read<UserProvider>().setUserAuth(true);
+    context.go('/');
   }
 
   @override
@@ -168,7 +169,7 @@ class _AuthPageState extends State<AuthPage> {
                         height: getContainerHeight(_verifyStatus, 'button'),
                         child: ElevatedButton(
                             onPressed: () {
-                              changeVerify();
+                              changeVerify(context);
                             },
                             child: (_verifyStatus == VerifyStatus.verifying)
                                 ? CircularProgressIndicator(

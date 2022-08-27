@@ -90,15 +90,16 @@ class Router extends StatelessWidget {
       GoRoute(
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
-          return AuthScreen();
+          return BaseScreen(
+            stateValue: 'home page',
+          );
         },
       ),
       GoRoute(
         path: '/login',
         builder: (BuildContext context, GoRouterState state) {
-          return BaseScreen(
-            stateValue: 'home page',
-          );
+          logger.d('context loggedIn = ${context.watch<UserProvider>().loggedIn}');
+          return AuthScreen();
         },
       ),
     ],
@@ -106,6 +107,7 @@ class Router extends StatelessWidget {
       // 여기서 provider를 사용하기 위해 router를 provider변수와 같은 레벨에 위치시킴
       // if the user is not logged in, they need to login
       final loggedIn = userState.loggedIn;
+      logger.d('loggedIn ${loggedIn}');
       // 로그인 하려는 중인가?
       final loggingIn = state.subloc == '/login';
       if (!loggedIn) return loggingIn ? null : '/login';
