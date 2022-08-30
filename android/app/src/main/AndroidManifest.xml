@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.carrot_market_by_flutter">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <application
         android:label="carrot_market_by_flutter"
         android:name="${applicationName}"
