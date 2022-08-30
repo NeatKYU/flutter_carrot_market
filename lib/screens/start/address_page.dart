@@ -85,6 +85,10 @@ class _AddressPageState extends State<AddressPage> {
                   }
 
                   _locationData = await location.getLocation();
+                  logger.d(_locationData);
+                  await AddressService().convertLocToAddress(
+                      lat: _locationData.latitude!,
+                      lng: _locationData.longitude!);
                 },
                 label: Text(
                   '현재위치로 찾기',

@@ -1,7 +1,8 @@
-import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:dio/dio.dart';
-import 'package:carrot_market_by_flutter/model/address/address.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:carrot_market_by_flutter/utils/logger.dart';
+import 'package:carrot_market_by_flutter/model/address/address.dart';
+import 'package:carrot_market_by_flutter/model/convert_address/convert_address.dart';
 
 class AddressService {
   String? kakaoAPIkey = dotenv.env['KAKAO_API_KEY'];
@@ -30,8 +31,52 @@ class AddressService {
     // response.data까지만 하면 나온다.... 후....
     Address addressModel = Address.fromJson(response.data);
 
-    logger.d(addressModel.toJson());
-
     return addressModel;
+  }
+
+  Future<void> convertLocToAddress(
+      {required double lat, required double lng}) async {
+    List<Map<String, dynamic>> addressList = [
+      {
+        'x': lng,
+        'y': lat,
+      },
+      {
+        'x': lng - 0.01,
+        'y': lat - 0.01,
+      },
+      {
+        'x': lng + 0.01,
+        'y': lat + 0.01,
+      },
+      {
+        'x': lng - 0.01,
+        'y': lat + 0.01,
+      },
+      {
+        'x': lng + 0.01,
+        'y': lat - 0.01,
+      },
+    ];
+
+    for (Map<String, dynamic> location in addressList) {
+      final response = await Dio()
+          .get(
+        '${kakaoUrl}/v2/local/geo/coord2address.json',
+        queryParameters: location,
+        options: Options(
+          headers: {'Authorization': kakaoAPIkey},
+        ),
+      )
+          .catchError((e) {
+        logger.e(e.error);
+      });
+
+      logger.d(response.data);
+    }
+
+    // ConvertAddress addressModel = ConvertAddress.fromJson(response.data);
+
+    // return addressModel;
   }
 }
