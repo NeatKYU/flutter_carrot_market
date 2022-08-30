@@ -1,19 +1,25 @@
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:carrot_market_by_flutter/model/address/address.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddressService {
+  String? kakaoAPIkey = dotenv.env['KAKAO_API_KEY'];
+  String? kakaoUrl = dotenv.env['KAKAO_BASE_URL'];
+
   Future<Address> getAddress(String searchKeyword) async {
     final data = {
-      'confmKey': 'devU01TX0FVVEgyMDIyMDgyNzE0MDgxMTExMjkyMjM=',
-      'keyword': searchKeyword,
-      'resultType': 'json'
+      'analyze_type': 'similar',
+      'query': searchKeyword,
     };
 
     final response = await Dio()
         .get(
-      'https://business.juso.go.kr/addrlink/addrLinkApi.do',
+      '${kakaoUrl}/v2/local/search/address.json',
       queryParameters: data,
+      options: Options(
+        headers: {'Authorization': kakaoAPIkey},
+      ),
     )
         .catchError((e) {
       logger.e(e.error);

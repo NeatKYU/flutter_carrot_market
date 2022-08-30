@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carrot_market_by_flutter/api/address_service.dart';
 import 'package:carrot_market_by_flutter/model/address/address.dart';
+import 'package:location/location.dart';
 
 class AddressPage extends StatefulWidget {
   const AddressPage({Key? key}) : super(key: key);
@@ -60,11 +61,30 @@ class _AddressPageState extends State<AddressPage> {
                   backgroundColor: Theme.of(context).primaryColor,
                   minimumSize: Size(10, 48),
                 ),
-                onPressed: () {
-                  // final keyword = _addressController.text;
-                  // if (keyword.isNotEmpty) {
-                  //   AddressService().getAddress(keyword);
-                  // }
+                onPressed: () async {
+                  Location location = new Location();
+
+                  bool _serviceEnabled;
+                  PermissionStatus _permissionGranted;
+                  LocationData _locationData;
+
+                  _serviceEnabled = await location.serviceEnabled();
+                  if (!_serviceEnabled) {
+                    _serviceEnabled = await location.requestService();
+                    if (!_serviceEnabled) {
+                      return;
+                    }
+                  }
+
+                  _permissionGranted = await location.hasPermission();
+                  if (_permissionGranted == PermissionStatus.denied) {
+                    _permissionGranted = await location.requestPermission();
+                    if (_permissionGranted != PermissionStatus.granted) {
+                      return;
+                    }
+                  }
+
+                  _locationData = await location.getLocation();
                 },
                 label: Text(
                   '현재위치로 찾기',
@@ -77,27 +97,23 @@ class _AddressPageState extends State<AddressPage> {
             child: ListView.builder(
               padding: EdgeInsets.symmetric(vertical: 16.0),
               itemBuilder: (context, index) {
-                if (_addressModel == null ||
-                    _addressModel!.results == null ||
-                    _addressModel!.results!.juso == null ||
-                    _addressModel!.results!.juso![index].roadAddr == null) {
+                if (_addressModel == null || _addressModel!.documents == null) {
                   return Container();
                 }
-                logger.d('list view = ${_addressModel!.results}');
+                logger.d('list view = ${_addressModel!.documents}');
                 return ListTile(
                   leading: Icon(Icons.image),
                   trailing: ExtendedImage.asset('assets/images/pos.png'),
                   // title: Text('address $index'),
                   title:
-                      Text(_addressModel!.results!.juso![index].roadAddr ?? ''),
+                      Text(_addressModel!.documents![index].addressName ?? ''),
                   subtitle: Text('subtitle $index'),
                 );
               },
-              itemCount: (_addressModel == null ||
-                      _addressModel!.results == null ||
-                      _addressModel!.results!.juso == null)
-                  ? 0
-                  : _addressModel!.results!.juso!.length,
+              itemCount:
+                  (_addressModel == null || _addressModel!.documents == null)
+                      ? 0
+                      : _addressModel!.documents!.length,
             ),
           )
         ],

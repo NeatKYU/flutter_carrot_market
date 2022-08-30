@@ -7,10 +7,11 @@ import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/screens/home_scren.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  logger.d('this is logger debug!!');
-  runApp(MyApp());
+void main() async {
+  await dotenv.load(fileName: 'assets/config/.env');
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
