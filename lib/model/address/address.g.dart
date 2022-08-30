@@ -7,11 +7,15 @@ part of 'address.dart';
 // **************************************************************************
 
 Address _$AddressFromJson(Map<String, dynamic> json) => Address(
-      results: json['results'] == null
+      documents: (json['documents'] as List<dynamic>?)
+          ?.map((e) => Document.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      meta: json['meta'] == null
           ? null
-          : Results.fromJson(json['results'] as Map<String, dynamic>),
+          : Meta.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
-      'results': instance.results,
+      'documents': instance.documents,
+      'meta': instance.meta,
     };

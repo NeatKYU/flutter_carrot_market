@@ -1,15 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'results.dart';
+import 'document.dart';
+import 'meta.dart';
 
 part 'address.g.dart';
 
 @JsonSerializable()
 class Address {
-  Results? results;
+  List<Document>? documents;
+  Meta? meta;
 
-  Address({this.results});
+  Address({this.documents, this.meta});
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return _$AddressFromJson(json);
@@ -26,5 +28,5 @@ class Address {
   }
 
   @override
-  int get hashCode => results.hashCode;
+  int get hashCode => documents.hashCode ^ meta.hashCode;
 }
