@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:carrot_market_by_flutter/api/address_service.dart';
 import 'package:carrot_market_by_flutter/model/address/address.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressPage extends StatefulWidget {
   const AddressPage({Key? key}) : super(key: key);
@@ -22,6 +23,13 @@ class _AddressPageState extends State<AddressPage> {
 
   bool _isLoading = false;
 
+  // sharedPreference라는 플러그인으로 사용자가 선택한 주소 저장
+  // web으로 따지면 storage같은 느낌.
+  _saveAddress(String address) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('address', address);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,6 +42,7 @@ class _AddressPageState extends State<AddressPage> {
             onFieldSubmitted: (keyword) async {
               _convertAddress.clear();
               _addressModel = await AddressService().getAddress(keyword);
+
               // 이거 안하면 구해진 address로 최신화가 안됨
               // 왜일까.....?
               setState(() {});
@@ -116,29 +125,34 @@ class _AddressPageState extends State<AddressPage> {
             ],
           ),
           if (_addressModel != null)
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              itemBuilder: (context, index) {
-                if (_addressModel == null || _addressModel!.documents == null) {
-                  return Container();
-                }
-                logger.d('list view = ${_addressModel!.documents}');
-                return ListTile(
-                  leading: Icon(Icons.image),
-                  trailing: ExtendedImage.asset('assets/images/pos.png'),
-                  // title: Text('address $index'),
-                  title:
-                      Text(_addressModel!.documents![index].addressName ?? ''),
-                  subtitle: Text('subtitle $index'),
-                );
-              },
-              itemCount:
-                  (_addressModel == null || _addressModel!.documents == null)
-                      ? 0
-                      : _addressModel!.documents!.length,
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                itemBuilder: (context, index) {
+                  if (_addressModel == null ||
+                      _addressModel!.documents == null) {
+                    return Container();
+                  }
+                  logger.d('list view = ${_addressModel!.documents}');
+                  return ListTile(
+                    onTap: () {
+                      _saveAddress(
+                          _addressModel!.documents![index].addressName ?? '');
+                    },
+                    leading: Icon(Icons.image),
+                    trailing: ExtendedImage.asset('assets/images/pos.png'),
+                    // title: Text('address $index'),
+                    title: Text(
+                        _addressModel!.documents![index].addressName ?? ''),
+                    subtitle: Text('subtitle $index'),
+                  );
+                },
+                itemCount:
+                    (_addressModel == null || _addressModel!.documents == null)
+                        ? 0
+                        : _addressModel!.documents!.length,
+              ),
             ),
-          ),
           if (_convertAddress.isNotEmpty)
             Expanded(
               child: ListView.builder(
@@ -148,6 +162,13 @@ class _AddressPageState extends State<AddressPage> {
                     return Container();
                   }
                   return ListTile(
+                    onTap: () {
+                      _saveAddress(_convertAddress[index]
+                          .documents![0]
+                          .address!
+                          .addressName
+                          .toString());
+                    },
                     leading: Icon(Icons.image),
                     trailing: ExtendedImage.asset('assets/images/pos.png'),
                     // title: Text('address $index'),
