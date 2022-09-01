@@ -45,6 +45,7 @@ dependencies:
   dio: ^4.0.6
   location: ^4.4.0
   flutter_dotenv: ^5.0.2
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
