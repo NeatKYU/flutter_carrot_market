@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/model/convert_address/convert_address.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,9 @@ class _AddressPageState extends State<AddressPage> {
   TextEditingController _addressController = TextEditingController();
 
   Address? _addressModel;
+  List<ConvertAddress> _convertAddress = [];
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,10 @@ class _AddressPageState extends State<AddressPage> {
           TextFormField(
             controller: _addressController,
             onFieldSubmitted: (keyword) async {
+              _convertAddress.clear();
               _addressModel = await AddressService().getAddress(keyword);
+              // 이거 안하면 구해진 address로 최신화가 안됨
+              // 왜일까.....?
               setState(() {});
             },
             // icon은 inputdecoration에 있는 icon을 사용
@@ -53,15 +60,23 @@ class _AddressPageState extends State<AddressPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextButton.icon(
-                icon: Icon(
-                  CupertinoIcons.compass,
-                  color: Colors.white,
-                ),
+                icon: _isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Icon(
+                        CupertinoIcons.compass,
+                        color: Colors.white,
+                      ),
                 style: TextButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
                   minimumSize: Size(10, 48),
                 ),
                 onPressed: () async {
+                  _addressModel = null;
+                  _convertAddress.clear();
+                  logger.d('clear? ', _convertAddress);
+                  setState(() {
+                    _isLoading = true;
+                  });
                   Location location = new Location();
 
                   bool _serviceEnabled;
@@ -85,18 +100,22 @@ class _AddressPageState extends State<AddressPage> {
                   }
 
                   _locationData = await location.getLocation();
-                  logger.d(_locationData);
-                  await AddressService().convertLocToAddress(
+                  _convertAddress = await AddressService().convertLocToAddress(
                       lat: _locationData.latitude!,
                       lng: _locationData.longitude!);
+
+                  setState(() {
+                    _isLoading = false;
+                  });
                 },
                 label: Text(
-                  '현재위치로 찾기',
+                  _isLoading ? '위치 찾는중...' : '현재위치로 찾기',
                   style: Theme.of(context).textTheme.button,
                 ),
               ),
             ],
           ),
+          if (_addressModel != null)
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -119,7 +138,37 @@ class _AddressPageState extends State<AddressPage> {
                       ? 0
                       : _addressModel!.documents!.length,
             ),
-          )
+          ),
+          if (_convertAddress.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                itemBuilder: (context, index) {
+                  if (_convertAddress[index].documents == null) {
+                    return Container();
+                  }
+                  return ListTile(
+                    leading: Icon(Icons.image),
+                    trailing: ExtendedImage.asset('assets/images/pos.png'),
+                    // title: Text('address $index'),
+                    title: Text(
+                        _convertAddress[index].documents![0].roadAddress != null
+                            ? _convertAddress[index]
+                                .documents![0]
+                                .roadAddress!
+                                .addressName
+                                .toString()
+                            : _convertAddress[index]
+                                .documents![0]
+                                .address!
+                                .addressName
+                                .toString()),
+                    subtitle: Text('subtitle $index'),
+                  );
+                },
+                itemCount: _convertAddress.length,
+              ),
+            )
         ],
       ),
     );

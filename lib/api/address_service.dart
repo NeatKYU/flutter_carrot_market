@@ -31,10 +31,11 @@ class AddressService {
     // response.data까지만 하면 나온다.... 후....
     Address addressModel = Address.fromJson(response.data);
 
+    logger.d(addressModel);
     return addressModel;
   }
 
-  Future<void> convertLocToAddress(
+  Future<List<ConvertAddress>> convertLocToAddress(
       {required double lat, required double lng}) async {
     List<Map<String, dynamic>> addressList = [
       {
@@ -59,6 +60,7 @@ class AddressService {
       },
     ];
 
+    List<ConvertAddress> result = [];
     for (Map<String, dynamic> location in addressList) {
       final response = await Dio()
           .get(
@@ -71,9 +73,12 @@ class AddressService {
           .catchError((e) {
         logger.e(e.error);
       });
-
-      logger.d(response.data);
+      if (response.data['meta']['totalCount'] != 0) {
+        result.add(ConvertAddress.fromJson(response.data));
+      }
     }
+    logger.d(result);
+    return result;
 
     // ConvertAddress addressModel = ConvertAddress.fromJson(response.data);
 
