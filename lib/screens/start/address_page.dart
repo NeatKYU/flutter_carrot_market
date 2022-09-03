@@ -9,7 +9,8 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressPage extends StatefulWidget {
-  const AddressPage({Key? key}) : super(key: key);
+  PageController controller;
+  AddressPage(this.controller, {Key? key}) : super(key: key);
 
   @override
   State<AddressPage> createState() => _AddressPageState();
@@ -22,6 +23,14 @@ class _AddressPageState extends State<AddressPage> {
   List<ConvertAddress> _convertAddress = [];
 
   bool _isLoading = false;
+
+  // 여기서 dispose로 컨트롤러를 해제시켜준다.
+  // 안해주면 나중에 메모리를 잡아 먹을 수 있음
+  @override
+  void dispose() {
+    _addressController.dispose();
+    super.dispose();
+  }
 
   // sharedPreference라는 플러그인으로 사용자가 선택한 주소 저장
   // web으로 따지면 storage같은 느낌.
@@ -168,6 +177,11 @@ class _AddressPageState extends State<AddressPage> {
                           .address!
                           .addressName
                           .toString());
+                      widget.controller.animateToPage(
+                        2,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
                     },
                     leading: Icon(Icons.image),
                     trailing: ExtendedImage.asset('assets/images/pos.png'),
