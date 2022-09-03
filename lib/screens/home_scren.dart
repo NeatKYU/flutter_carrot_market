@@ -29,8 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Text('this is Home'),
+      body: IndexedStack(
+        index: _bottomNaviIndex,
+        children: [
+          Container(color: Colors.blueAccent),
+          Container(color: Colors.amberAccent),
+          Container(color: Colors.cyan),
+          Container(color: Colors.redAccent),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomNaviIndex,
