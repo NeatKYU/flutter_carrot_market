@@ -62,6 +62,8 @@ class Router extends StatelessWidget {
             hintColor: Colors.grey,
             textTheme: const TextTheme(
               button: TextStyle(color: Colors.white),
+              subtitle1: TextStyle(color: Colors.blueGrey, fontSize: 15),
+              subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(

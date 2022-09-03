@@ -1,5 +1,6 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ItemsPage extends StatelessWidget {
@@ -25,16 +26,38 @@ class ItemsPage extends StatelessWidget {
           child: Row(
             children: [
               ExtendedImage.network('https://picsum.photos/100'),
+              const SizedBox(
+                width: common_padding,
+              ),
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('title'),
-                    Text('53일전'),
+                    Text('title', style: Theme.of(context).textTheme.subtitle1),
+                    Text('53일전', style: Theme.of(context).textTheme.subtitle2),
                     Text('5000won'),
+                    // row가 내려가게 expanded로 전부 차지하게 해줌
                     Expanded(
-                      child: Row(
-                        children: [],
-                      ),
+                      child: Container(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 18,
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Row(
+                              children: [
+                                Icon(CupertinoIcons.chat_bubble_2),
+                                Text('23'),
+                                Icon(CupertinoIcons.heart),
+                                Text('30'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
