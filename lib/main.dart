@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/screens/base_screen.dart';
@@ -8,9 +9,14 @@ import 'package:provider/provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/screens/home_scren.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'firebase_options.dart';
 
 void main() async {
   await dotenv.load(fileName: 'assets/config/.env');
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
