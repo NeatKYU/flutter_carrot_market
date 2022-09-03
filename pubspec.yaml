@@ -46,6 +46,7 @@ dependencies:
   location: ^4.4.0
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.15
+  firebase_core: ^1.21.1
 
 dev_dependencies:
   flutter_test:
