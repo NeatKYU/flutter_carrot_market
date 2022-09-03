@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
+import 'package:carrot_market_by_flutter/screens/home/items_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: _bottomNaviIndex,
         children: [
-          Container(color: Colors.blueAccent),
+          ItemsPage(),
           Container(color: Colors.amberAccent),
           Container(color: Colors.cyan),
           Container(color: Colors.redAccent),
