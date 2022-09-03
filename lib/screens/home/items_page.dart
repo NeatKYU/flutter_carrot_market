@@ -25,7 +25,12 @@ class ItemsPage extends StatelessWidget {
           height: 100,
           child: Row(
             children: [
-              ExtendedImage.network('https://picsum.photos/100'),
+              ExtendedImage.network(
+                'https://picsum.photos/100',
+                // 이거 지정 안해주면 보더 적용 안됨
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10),
+              ),
               const SizedBox(
                 width: common_padding,
               ),
