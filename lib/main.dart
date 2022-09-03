@@ -60,7 +60,7 @@ class Router extends StatelessWidget {
             primarySwatch: Colors.green,
             fontFamily: 'DoHyeon',
             hintColor: Colors.grey,
-            textTheme: TextTheme(
+            textTheme: const TextTheme(
               button: TextStyle(color: Colors.white),
             ),
             textButtonTheme: TextButtonThemeData(
@@ -70,7 +70,7 @@ class Router extends StatelessWidget {
                 primary: Colors.white,
               ),
             ),
-            appBarTheme: AppBarTheme(
+            appBarTheme: const AppBarTheme(
               backgroundColor: Colors.white,
               elevation: 2,
               titleTextStyle: TextStyle(
@@ -79,6 +79,10 @@ class Router extends StatelessWidget {
                 color: Colors.black,
               ),
               actionsIconTheme: IconThemeData(color: Colors.black),
+            ),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              selectedItemColor: Colors.black87,
+              unselectedItemColor: Colors.black38,
             ),
           ),
           routeInformationProvider: _router.routeInformationProvider,
@@ -105,20 +109,20 @@ class Router extends StatelessWidget {
         },
       ),
     ],
-    redirect: (GoRouterState state) {
-      // 여기서 provider를 사용하기 위해 router를 provider변수와 같은 레벨에 위치시킴
-      // if the user is not logged in, they need to login
-      final loggedIn = userState.loggedIn;
-      // 로그인 하려는 중인가?
-      final loggingIn = state.subloc == '/login';
-      if (!loggedIn) return loggingIn ? null : '/login';
+    // redirect: (GoRouterState state) {
+    //   // 여기서 provider를 사용하기 위해 router를 provider변수와 같은 레벨에 위치시킴
+    //   // if the user is not logged in, they need to login
+    //   final loggedIn = userState.loggedIn;
+    //   // 로그인 하려는 중인가?
+    //   final loggingIn = state.subloc == '/login';
+    //   if (!loggedIn) return loggingIn ? null : '/login';
 
-      // if the user is logged in but still on the login page, send them to
-      // the home page
-      if (loggingIn) return '/';
+    //   // if the user is logged in but still on the login page, send them to
+    //   // the home page
+    //   if (loggingIn) return '/';
 
-      return null;
-    },
+    //   return null;
+    // },
     refreshListenable: userState,
   );
 }
