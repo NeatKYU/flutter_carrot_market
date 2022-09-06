@@ -120,10 +120,10 @@ class Router extends StatelessWidget {
     redirect: (GoRouterState state) {
       // 여기서 provider를 사용하기 위해 router를 provider변수와 같은 레벨에 위치시킴
       // if the user is not logged in, they need to login
-      final loggedIn = userState.loggedIn;
+      // final loggedIn = userState.user;
       // 로그인 하려는 중인가?
       final loggingIn = state.subloc == '/login';
-      if (!loggedIn) return loggingIn ? null : '/login';
+      if (userState.user == null) return loggingIn ? null : '/login';
 
       // if the user is logged in but still on the login page, send them to
       // the home page

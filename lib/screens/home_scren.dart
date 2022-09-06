@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.text_justify)),
           IconButton(
             onPressed: () {
-              context.read<UserProvider>().setUserAuth(false);
+              // sign out
+              // context.read<UserProvider>().setUserAuth(false);
+              // firebase sign out
+              FirebaseAuth.instance.signOut();
             },
             icon: Icon(Icons.logout),
           ),

@@ -20,6 +20,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   // 이런 underBar변수들은 build밖에서 선언해주는게 좋은듯..
   VerifyStatus _verifyStatus = VerifyStatus.none;
+  String? _verificationId;
 
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -53,8 +54,14 @@ class _AuthPageState extends State<AuthPage> {
       _verifyStatus = VerifyStatus.done;
     });
 
-    context.read<UserProvider>().setUserAuth(true);
-    context.go('/');
+    // Create a PhoneAuthCredential with the code
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId!, smsCode: _codeController.text);
+
+    // Sign the user in (or link) with the credential
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    // context.go('/');
   }
 
   @override
@@ -124,6 +131,10 @@ class _AuthPageState extends State<AuthPage> {
                           // 이거 이렇게 연결 안하면 input에서 validator가 안먹네???? 왤까????
                           if (_formkey.currentState != null) {
                             bool passed = _formkey.currentState!.validate();
+                            String _phoneNumber = _phoneNumberController.text
+                                .replaceAll(' ', '')
+                                .replaceFirst('0', '');
+
                             if (passed) {
                               FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -132,7 +143,7 @@ class _AuthPageState extends State<AuthPage> {
                               //     .signInWithPhoneNumber('+821055555555');
 
                               await auth.verifyPhoneNumber(
-                                phoneNumber: '+821055555555',
+                                phoneNumber: '+82${_phoneNumber}',
                                 verificationCompleted:
                                     (PhoneAuthCredential credential) async {
                                   // ANDROID ONLY!
@@ -143,8 +154,11 @@ class _AuthPageState extends State<AuthPage> {
                                 codeAutoRetrievalTimeout:
                                     (String verificationId) {},
                                 codeSent: (String verificationId,
-                                    int? forceResendingToken) {
-                                  _verifyStatus = VerifyStatus.codeSent;
+                                    int? forceResendingToken) async {
+                                  setState(() {
+                                    _verifyStatus = VerifyStatus.codeSent;
+                                    _verificationId = verificationId;
+                                  });
                                 },
                                 verificationFailed:
                                     (FirebaseAuthException error) {
@@ -167,8 +181,7 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     AnimatedOpacity(
                       duration: Duration(milliseconds: 300),
-                      // opacity: _verifyStatus == VerifyStatus.none ? 0 : 1,
-                      opacity: 1,
+                      opacity: _verifyStatus == VerifyStatus.none ? 0 : 1,
                       child: AnimatedContainer(
                         duration: Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
