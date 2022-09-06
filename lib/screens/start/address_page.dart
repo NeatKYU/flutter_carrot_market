@@ -147,6 +147,11 @@ class _AddressPageState extends State<AddressPage> {
                     onTap: () {
                       _saveAddress(
                           _addressModel!.documents![index].addressName ?? '');
+                      widget.controller.animateToPage(
+                        2,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
                     },
                     leading: Icon(Icons.image),
                     trailing: ExtendedImage.asset('assets/images/pos.png'),

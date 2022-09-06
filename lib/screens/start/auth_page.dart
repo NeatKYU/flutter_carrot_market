@@ -1,5 +1,6 @@
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
@@ -119,14 +120,40 @@ class _AuthPageState extends State<AuthPage> {
                       height: 8.0,
                     ),
                     ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // 이거 이렇게 연결 안하면 input에서 validator가 안먹네???? 왤까????
                           if (_formkey.currentState != null) {
                             bool passed = _formkey.currentState!.validate();
                             if (passed) {
-                              setState(() {
-                                _verifyStatus = VerifyStatus.codeSent;
-                              });
+                              FirebaseAuth auth = FirebaseAuth.instance;
+
+                              // web으로 접속하려면 이 코드를 사용하면 되는데 이게 버그가 있는듯하다.
+                              // ConfirmationResult confirmationResult = await auth
+                              //     .signInWithPhoneNumber('+821055555555');
+
+                              await auth.verifyPhoneNumber(
+                                phoneNumber: '+821055555555',
+                                verificationCompleted:
+                                    (PhoneAuthCredential credential) async {
+                                  // ANDROID ONLY!
+
+                                  // Sign the user in (or link) with the auto-generated credential
+                                  await auth.signInWithCredential(credential);
+                                },
+                                codeAutoRetrievalTimeout:
+                                    (String verificationId) {},
+                                codeSent: (String verificationId,
+                                    int? forceResendingToken) {
+                                  _verifyStatus = VerifyStatus.codeSent;
+                                },
+                                verificationFailed:
+                                    (FirebaseAuthException error) {
+                                  logger.e(error.message);
+                                },
+                              );
+                              // setState(() {
+                              //   _verifyStatus = VerifyStatus.codeSent;
+                              // });
                               logger.d(_verifyStatus);
                             }
                           }
@@ -140,7 +167,8 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     AnimatedOpacity(
                       duration: Duration(milliseconds: 300),
-                      opacity: _verifyStatus == VerifyStatus.none ? 0 : 1,
+                      // opacity: _verifyStatus == VerifyStatus.none ? 0 : 1,
+                      opacity: 1,
                       child: AnimatedContainer(
                         duration: Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
@@ -170,6 +198,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: ElevatedButton(
                             onPressed: () {
                               changeVerify(context);
+                              // _confirmationResult.confirm('659484');
                             },
                             child: (_verifyStatus == VerifyStatus.verifying)
                                 ? CircularProgressIndicator(
