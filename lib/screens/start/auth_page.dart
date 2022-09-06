@@ -8,7 +8,7 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
-enum VerifyStatus { none, codeSent, verifying, done }
+enum VerifyStatus { none, codeSending, codeSent, verifying, done }
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -21,6 +21,7 @@ class _AuthPageState extends State<AuthPage> {
   // 이런 underBar변수들은 build밖에서 선언해주는게 좋은듯..
   VerifyStatus _verifyStatus = VerifyStatus.none;
   String? _verificationId;
+  int? _forceResendingToken;
 
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -32,6 +33,7 @@ class _AuthPageState extends State<AuthPage> {
     switch (status) {
       case VerifyStatus.none:
         return 0;
+      case VerifyStatus.codeSending:
       case VerifyStatus.codeSent:
       case VerifyStatus.verifying:
       case VerifyStatus.done:
@@ -54,12 +56,19 @@ class _AuthPageState extends State<AuthPage> {
       _verifyStatus = VerifyStatus.done;
     });
 
-    // Create a PhoneAuthCredential with the code
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId!, smsCode: _codeController.text);
+    try {
+      // Create a PhoneAuthCredential with the code
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId!, smsCode: _codeController.text);
 
-    // Sign the user in (or link) with the credential
-    await FirebaseAuth.instance.signInWithCredential(credential);
+      // Sign the user in (or link) with the credential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      logger.e('verification failed!! check sms code!');
+      SnackBar snackBar = new SnackBar(content: Text('코드가 맞지 않아요!'));
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
 
     // context.go('/');
   }
@@ -128,6 +137,7 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     ElevatedButton(
                         onPressed: () async {
+                          if (_verifyStatus == VerifyStatus.codeSending) return;
                           // 이거 이렇게 연결 안하면 input에서 validator가 안먹네???? 왤까????
                           if (_formkey.currentState != null) {
                             bool passed = _formkey.currentState!.validate();
@@ -138,12 +148,17 @@ class _AuthPageState extends State<AuthPage> {
                             if (passed) {
                               FirebaseAuth auth = FirebaseAuth.instance;
 
+                              setState(() {
+                                VerifyStatus.codeSending;
+                              });
+
                               // web으로 접속하려면 이 코드를 사용하면 되는데 이게 버그가 있는듯하다.
                               // ConfirmationResult confirmationResult = await auth
                               //     .signInWithPhoneNumber('+821055555555');
 
                               await auth.verifyPhoneNumber(
                                 phoneNumber: '+82${_phoneNumber}',
+                                forceResendingToken: _forceResendingToken,
                                 verificationCompleted:
                                     (PhoneAuthCredential credential) async {
                                   // ANDROID ONLY!
@@ -158,11 +173,16 @@ class _AuthPageState extends State<AuthPage> {
                                   setState(() {
                                     _verifyStatus = VerifyStatus.codeSent;
                                     _verificationId = verificationId;
+                                    _forceResendingToken = forceResendingToken;
                                   });
                                 },
                                 verificationFailed:
                                     (FirebaseAuthException error) {
                                   logger.e(error.message);
+
+                                  setState(() {
+                                    VerifyStatus.none;
+                                  });
                                 },
                               );
                               // setState(() {
@@ -172,7 +192,9 @@ class _AuthPageState extends State<AuthPage> {
                             }
                           }
                         },
-                        child: Text('인증문자 받기'),
+                        child: _verifyStatus == VerifyStatus.codeSending
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text('인증문자 받기'),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(50),
                         )),
