@@ -48,6 +48,7 @@ dependencies:
   shared_preferences: ^2.0.15
   firebase_core: ^1.21.1
   firebase_auth: ^3.7.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
