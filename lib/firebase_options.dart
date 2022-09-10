@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '881562033772',
     projectId: 'flutter-app-cefe7',
     storageBucket: 'flutter-app-cefe7.appspot.com',
-    iosClientId: '881562033772-ek4gc81dfs26a5elnsvrmkjdcgssjd5i.apps.googleusercontent.com',
+    iosClientId:
+        '881562033772-ek4gc81dfs26a5elnsvrmkjdcgssjd5i.apps.googleusercontent.com',
     iosBundleId: 'com.example.carrotMarketByFlutter',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '881562033772',
     projectId: 'flutter-app-cefe7',
     storageBucket: 'flutter-app-cefe7.appspot.com',
-    iosClientId: '881562033772-ek4gc81dfs26a5elnsvrmkjdcgssjd5i.apps.googleusercontent.com',
+    iosClientId:
+        '881562033772-ek4gc81dfs26a5elnsvrmkjdcgssjd5i.apps.googleusercontent.com',
     iosBundleId: 'com.example.carrotMarketByFlutter',
   );
 }
