@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/constants/shared_pref_keys.dart';
 import 'package:carrot_market_by_flutter/model/convert_address/convert_address.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:extended_image/extended_image.dart';
@@ -34,9 +35,11 @@ class _AddressPageState extends State<AddressPage> {
 
   // sharedPreference라는 플러그인으로 사용자가 선택한 주소 저장
   // web으로 따지면 storage같은 느낌.
-  _saveAddress(String address) async {
+  _saveAddress(String address, num lat, num lon) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('address', address);
+    await prefs.setString(SHARED_ADDRESS, address);
+    await prefs.setDouble(SHARED_LAT, lat.toDouble());
+    await prefs.setDouble(SHARED_LON, lon.toDouble());
   }
 
   @override
@@ -145,8 +148,12 @@ class _AddressPageState extends State<AddressPage> {
                   logger.d('list view = ${_addressModel!.documents}');
                   return ListTile(
                     onTap: () {
+                      logger.d(num.parse(_addressModel!.documents![index].x!));
+
                       _saveAddress(
-                          _addressModel!.documents![index].addressName ?? '');
+                          _addressModel!.documents![index].addressName ?? '',
+                          num.parse(_addressModel!.documents![index].y!),
+                          num.parse(_addressModel!.documents![index].x!));
                       widget.controller.animateToPage(
                         2,
                         duration: Duration(milliseconds: 300),
@@ -176,12 +183,17 @@ class _AddressPageState extends State<AddressPage> {
                     return Container();
                   }
                   return ListTile(
-                    onTap: () {
-                      _saveAddress(_convertAddress[index]
-                          .documents![0]
-                          .address!
-                          .addressName
-                          .toString());
+                    onTap: () async {
+                      Location location = new Location();
+                      LocationData _locationData = await location.getLocation();
+                      _saveAddress(
+                          _convertAddress[index]
+                              .documents![0]
+                              .address!
+                              .addressName
+                              .toString(),
+                          _locationData.latitude!.toDouble(),
+                          _locationData.longitude!.toDouble());
                       widget.controller.animateToPage(
                         2,
                         duration: Duration(milliseconds: 300),

@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/constants/shared_pref_keys.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum VerifyStatus { none, codeSending, codeSent, verifying, done }
 
@@ -71,6 +73,13 @@ class _AuthPageState extends State<AuthPage> {
     }
 
     // context.go('/');
+  }
+
+  _getAddress() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String address = prefs.getString(SHARED_ADDRESS) ?? "";
+    double lat = prefs.getDouble(SHARED_LAT) ?? 0;
+    double lon = prefs.getDouble(SHARED_LON) ?? 0;
   }
 
   @override
