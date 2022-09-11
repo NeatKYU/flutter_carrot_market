@@ -1,4 +1,5 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageList extends StatelessWidget {
@@ -7,6 +8,7 @@ class ImageList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
+    double imageWidth = _size.width / 3 - (common_padding * 2);
 
     return SizedBox(
       height: _size.width / 3,
@@ -16,7 +18,7 @@ class ImageList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(common_padding),
             child: Container(
-                width: _size.width / 3 - (common_padding*2),
+                width: imageWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(color: Colors.grey, width: 1),
@@ -35,17 +37,22 @@ class ImageList extends StatelessWidget {
                   ],
                 )),
           ),
-          Container(
-            width: _size.width / 3,
-            color: Colors.blueGrey,
-          ),
-          Container(
-            width: _size.width / 3,
-            color: Colors.amberAccent,
-          ),
-          Container(
-            width: _size.width / 3,
-            color: Colors.redAccent,
+          ...List.generate(
+            10,
+            (index) => Padding(
+              padding: EdgeInsets.only(
+                right: common_padding,
+                top: common_padding,
+                bottom: common_padding,
+              ),
+              child: ExtendedImage.network(
+                'https://picsum.photos/100',
+                width: imageWidth,
+                height: imageWidth,
+                borderRadius: BorderRadius.circular(common_padding_sm),
+                shape: BoxShape.rectangle,
+              ),
+            ),
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/widgets/image_list.dart';
@@ -40,7 +41,18 @@ class _InputScreenState extends State<InputScreen> {
           )
         ],
       ),
-      body: ImageList(),
+      body: Column(
+        children: [
+          ImageList(),
+          Divider(
+            color: Colors.grey,
+            endIndent: common_padding,
+            indent: common_padding,
+            thickness: 1,
+            height: 1,
+          )
+        ],
+      ),
     );
   }
 }
