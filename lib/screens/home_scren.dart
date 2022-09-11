@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/screens/home/items_page.dart';
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         distance: 90,
         children: [
           ActionButton(
-            onPressed: () => _showAction(context, 0),
+            onPressed: () => GoRouter.of(context).go('/input'),
             icon: const Icon(Icons.format_size),
           ),
           ActionButton(
