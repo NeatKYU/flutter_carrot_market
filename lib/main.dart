@@ -71,6 +71,10 @@ class Router extends StatelessWidget {
               button: TextStyle(color: Colors.white),
               subtitle1: TextStyle(color: Colors.blueGrey, fontSize: 15),
               subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
+              bodyText2: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300),
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(

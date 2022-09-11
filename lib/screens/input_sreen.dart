@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:go_router/go_router.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({super.key});
@@ -16,6 +17,29 @@ class _InputScreenState extends State<InputScreen> {
       appBar: AppBar(
         title: Text('중고거래 글쓰기'),
         foregroundColor: Colors.black,
+        // 닫기 버튼 커스텀
+        leading: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          ),
+          child: Text(
+            '닫기',
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          onPressed: () => {GoRouter.of(context).go('/')},
+        ),
+        actions: [
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            ),
+            child: Text(
+              '완료',
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+            onPressed: () => {},
+          )
+        ],
       ),
     );
   }
