@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 
@@ -18,6 +19,18 @@ class UserService {
     if (!documentSnapshot.exists) {
       documentReference.set(json);
     }
+  }
+
+  // user model 상태관리를 위한 로직
+  Future<UserModel> getUserModel(String userKey) async {
+    DocumentReference<Map<String, dynamic>> documentReference =
+        FirebaseFirestore.instance.collection('users').doc(userKey);
+    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        await documentReference.get();
+
+    UserModel userModel = UserModel.fromSnapshot(documentSnapshot);
+
+    return userModel;
   }
 
   // DB에 데이터 저장

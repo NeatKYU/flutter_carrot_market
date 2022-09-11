@@ -10,6 +10,7 @@ import '../utils/logger.dart';
 
 class UserProvider extends ChangeNotifier {
   User? _user;
+  UserModel? _userModel;
 
   UserProvider() {
     initUser();
@@ -47,7 +48,9 @@ class UserProvider extends ChangeNotifier {
         createdDate: DateTime.now().toUtc(),
       );
 
+      // 싱글리턴을 사용하면 아래와같이 여러개의 생성자를 사용해도 하나의 주소값만 사용해서 메모리 이득 볼 수 있다.
       await UserService().createNewUser(userModel.toJson(), userKey);
+      _userModel = await UserService().getUserModel(userKey);
 
       //이거 해줘야지 라우터에서 비교 가능!!!
       _user = user;

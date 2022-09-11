@@ -26,8 +26,14 @@ class UserModel {
     this.reference,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json, String userKey, DocumentReference reference) {
+  factory UserModel.fromJson(
+      Map<String, dynamic> json, String userKey, DocumentReference reference) {
     return _$UserModelFromJson(json, userKey, reference);
+  }
+
+  // usermodel 저장하기 위한 로직
+  UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    UserModel.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
   }
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
