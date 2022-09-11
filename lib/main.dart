@@ -1,4 +1,5 @@
-import 'package:carrot_market_by_flutter/screens/input_sreen.dart';
+import 'package:carrot_market_by_flutter/screens/input/category_input_screen.dart';
+import 'package:carrot_market_by_flutter/screens/input/input_sreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -108,19 +109,28 @@ class Router extends StatelessWidget {
   late final GoRouter _router = GoRouter(
     routes: <GoRoute>[
       GoRoute(
-          path: '/',
-          builder: (BuildContext context, GoRouterState state) {
-            return HomeScreen();
-          },
-          // 이렇게 라우터를 타면 appbar에 뒤로가기 버튼이 생김
-          routes: [
-            GoRoute(
-              path: 'input',
-              builder: (BuildContext context, GoRouterState state) {
-                return InputScreen();
-              },
-            ),
-          ]),
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) {
+          return HomeScreen();
+        },
+        // 이렇게 라우터를 타면 appbar에 뒤로가기 버튼이 생김
+        routes: [
+          GoRoute(
+            path: 'input',
+            builder: (BuildContext context, GoRouterState state) {
+              return InputScreen();
+            },
+            routes: [
+              GoRoute(
+                path: 'category',
+                builder: (BuildContext context, GoRouterState state) {
+                  return CategoryInputScreen();
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
       GoRoute(
         path: '/login',
         builder: (BuildContext context, GoRouterState state) {

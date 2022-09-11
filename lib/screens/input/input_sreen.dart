@@ -72,6 +72,9 @@ class _InputScreenState extends State<InputScreen> {
           ),
           _divider,
           ListTile(
+            onTap: () {
+              GoRouter.of(context).go('/input/category');
+            },
             dense: true,
             title: Text('선택'),
             trailing: Icon(Icons.arrow_forward_ios),
@@ -136,6 +139,19 @@ class _InputScreenState extends State<InputScreen> {
                 },
               ),
             ],
+          ),
+          _divider,
+          TextFormField(
+            // null로 넘겨주면 몇줄을 입력하든 상관없음
+            maxLines: null,
+            // 가상 키보드의 형식이 multiline으로 변경됨
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: common_padding),
+              hintText: '내용을 써주세요.',
+              focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
+              enabledBorder: UnderlineInputBorder(borderSide: BorderSide.none),
+            ),
           ),
         ],
       ),
