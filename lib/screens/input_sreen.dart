@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
+import 'package:carrot_market_by_flutter/widgets/image_list.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({super.key});
@@ -41,6 +40,7 @@ class _InputScreenState extends State<InputScreen> {
           )
         ],
       ),
+      body: ImageList(),
     );
   }
 }
