@@ -11,6 +11,16 @@ class InputScreen extends StatefulWidget {
 }
 
 class _InputScreenState extends State<InputScreen> {
+  bool _selectedPrice = false;
+
+  Widget _divider = Divider(
+    color: Colors.grey,
+    endIndent: common_padding,
+    indent: common_padding,
+    thickness: 1,
+    height: 1,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,13 +54,70 @@ class _InputScreenState extends State<InputScreen> {
       body: Column(
         children: [
           ImageList(),
-          Divider(
-            color: Colors.grey,
-            endIndent: common_padding,
-            indent: common_padding,
-            thickness: 1,
-            height: 1,
-          )
+          _divider,
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: '글 제목',
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent)),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: common_padding,
+              ),
+            ),
+          ),
+          _divider,
+          ListTile(
+            dense: true,
+            title: Text('선택'),
+            trailing: Icon(Icons.arrow_forward_ios),
+          ),
+          _divider,
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: common_padding),
+                    hintText: '가격 입력(선택사항)',
+                    focusedBorder:
+                        UnderlineInputBorder(borderSide: BorderSide.none),
+                    enabledBorder:
+                        UnderlineInputBorder(borderSide: BorderSide.none),
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                label: Text(
+                  '가격제안 받기',
+                  style: TextStyle(
+                    color: _selectedPrice
+                        ? Theme.of(context).primaryColor
+                        : Colors.black,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.check_circle_outline,
+                  color: _selectedPrice
+                      ? Theme.of(context).primaryColor
+                      : Colors.black,
+                  size: 22,
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  padding: EdgeInsets.only(right: common_padding),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _selectedPrice = !_selectedPrice;
+                  });
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );
