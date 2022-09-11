@@ -39,19 +39,35 @@ class ImageList extends StatelessWidget {
           ),
           ...List.generate(
             10,
-            (index) => Padding(
-              padding: EdgeInsets.only(
-                right: common_padding,
-                top: common_padding,
-                bottom: common_padding,
-              ),
-              child: ExtendedImage.network(
-                'https://picsum.photos/100',
-                width: imageWidth,
-                height: imageWidth,
-                borderRadius: BorderRadius.circular(common_padding_sm),
-                shape: BoxShape.rectangle,
-              ),
+            (index) => Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: common_padding,
+                    top: common_padding,
+                    bottom: common_padding,
+                  ),
+                  child: ExtendedImage.network(
+                    'https://picsum.photos/100',
+                    width: imageWidth,
+                    height: imageWidth,
+                    borderRadius: BorderRadius.circular(common_padding_sm),
+                    shape: BoxShape.rectangle,
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  width: 40,
+                  height: 40,
+                  child: IconButton(
+                    padding: EdgeInsets.all(4),
+                    onPressed: () {},
+                    icon: Icon(Icons.remove_circle),
+                    color: Colors.black38
+                  ),
+                ),
+              ],
             ),
           ),
         ],
