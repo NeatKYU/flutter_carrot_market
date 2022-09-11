@@ -1,5 +1,6 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/widgets/image_list.dart';
 
@@ -12,6 +13,7 @@ class InputScreen extends StatefulWidget {
 
 class _InputScreenState extends State<InputScreen> {
   bool _selectedPrice = false;
+  TextEditingController _moneyController = TextEditingController();
 
   Widget _divider = Divider(
     color: Colors.grey,
@@ -79,6 +81,21 @@ class _InputScreenState extends State<InputScreen> {
             children: [
               Expanded(
                 child: TextFormField(
+                  // 남는 글자 삭제
+                  onChanged: (value) {
+                    if (value == '0원') {
+                      _moneyController.clear();
+                    }
+                  },
+                  controller: _moneyController,
+                  // 돈형식의 input값을 받기 위한 포맷터
+                  inputFormatters: [
+                    CurrencyInputFormatter(
+                      trailingSymbol: '원',
+                      mantissaLength: 0,
+                    )
+                  ],
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: common_padding),
@@ -100,7 +117,9 @@ class _InputScreenState extends State<InputScreen> {
                   ),
                 ),
                 icon: Icon(
-                  Icons.check_circle_outline,
+                  _selectedPrice
+                      ? Icons.check_circle
+                      : Icons.check_circle_outline,
                   color: _selectedPrice
                       ? Theme.of(context).primaryColor
                       : Colors.black,
