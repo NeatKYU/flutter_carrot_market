@@ -1,8 +1,10 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/widgets/image_list.dart';
+import 'package:provider/provider.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({super.key});
@@ -76,7 +78,7 @@ class _InputScreenState extends State<InputScreen> {
               GoRouter.of(context).go('/input/category');
             },
             dense: true,
-            title: Text('선택'),
+            title: Text(context.watch<CategoryProvider>().currentCategory),
             trailing: Icon(Icons.arrow_forward_ios),
           ),
           _divider,

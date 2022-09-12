@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:carrot_market_by_flutter/screens/input/category_input_screen.dart';
 import 'package:carrot_market_by_flutter/screens/input/input_sreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,48 +62,53 @@ class Router extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      ChangeNotifierProvider<UserProvider>.value(
-        value: userState,
-        child: MaterialApp.router(
-          theme: ThemeData(
-            primarySwatch: Colors.green,
-            fontFamily: 'DoHyeon',
-            hintColor: Colors.grey,
-            textTheme: const TextTheme(
-              button: TextStyle(color: Colors.white),
-              subtitle1: TextStyle(color: Colors.blueGrey, fontSize: 15),
-              subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
-              bodyText2: TextStyle(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CategoryProvider())
+        ],
+        child: ChangeNotifierProvider<UserProvider>.value(
+          value: userState,
+          child: MaterialApp.router(
+            theme: ThemeData(
+              primarySwatch: Colors.green,
+              fontFamily: 'DoHyeon',
+              hintColor: Colors.grey,
+              textTheme: const TextTheme(
+                button: TextStyle(color: Colors.white),
+                subtitle1: TextStyle(color: Colors.blueGrey, fontSize: 15),
+                subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
+                bodyText2: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300),
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
+                  primary: Colors.white,
+                ),
+              ),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.white,
+                elevation: 2,
+                titleTextStyle: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'DoHyeon',
                   color: Colors.black,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-                // 이걸 설정하면 눌렀을때 이펙트가 white색으로 보임
-                primary: Colors.white,
+                ),
+                actionsIconTheme: IconThemeData(color: Colors.black),
+              ),
+              bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                selectedItemColor: Colors.black87,
+                unselectedItemColor: Colors.black38,
               ),
             ),
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              elevation: 2,
-              titleTextStyle: TextStyle(
-                fontSize: 20,
-                fontFamily: 'DoHyeon',
-                color: Colors.black,
-              ),
-              actionsIconTheme: IconThemeData(color: Colors.black),
-            ),
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              selectedItemColor: Colors.black87,
-              unselectedItemColor: Colors.black38,
-            ),
+            routeInformationProvider: _router.routeInformationProvider,
+            routeInformationParser: _router.routeInformationParser,
+            routerDelegate: _router.routerDelegate,
+            title: 'GoRouter Example',
           ),
-          routeInformationProvider: _router.routeInformationProvider,
-          routeInformationParser: _router.routeInformationParser,
-          routerDelegate: _router.routerDelegate,
-          title: 'GoRouter Example',
         ),
       );
 

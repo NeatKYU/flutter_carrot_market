@@ -1,6 +1,7 @@
+import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CategoryInputScreen extends StatelessWidget {
   const CategoryInputScreen({super.key});
@@ -14,8 +15,16 @@ class CategoryInputScreen extends StatelessWidget {
       ),
       body: ListView.separated(
           itemBuilder: (context, index) {
+            final String _value = categoryMapEngToKor.values.elementAt(index);
             return ListTile(
-              title: Text(categoryList[index]),
+              onTap: () {
+                context.read<CategoryProvider>().setNewCategoryWithValue(_value);
+                GoRouter.of(context).go('/input');
+              },
+              title: Text(_value),
+              selected: context.read<CategoryProvider>().currentCategory == _value,
+              selectedTileColor: Color.fromARGB(255, 178, 197, 207),
+              selectedColor: Colors.black,
             );
           },
           separatorBuilder: (context, index) {
@@ -24,18 +33,7 @@ class CategoryInputScreen extends StatelessWidget {
               height: 1,
             );
           },
-          itemCount: categoryList.length),
+          itemCount: categoryMapEngToKor.length),
     );
   }
 }
-
-const List<String> categoryList = [
-  '상의',
-  '하의',
-  '아우터',
-  '신발',
-  '양말',
-  '모자',
-  '속옷',
-  '명품'
-];
