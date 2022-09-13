@@ -77,9 +77,26 @@ class _ImageListState extends State<ImageList> {
                             snapshot.data!,
                             width: imageWidth,
                             height: imageWidth,
+                            // 이미지를 박스 크기에 맞춰서 보여준다.
+                            fit: BoxFit.cover,
                             borderRadius:
                                 BorderRadius.circular(common_padding_sm),
                             shape: BoxShape.rectangle,
+                            loadStateChanged: (state) {
+                              switch (state.extendedImageLoadState) {
+                                case LoadState.loading:
+                                  return Container(
+                                    width: imageWidth,
+                                    height: imageWidth,
+                                    padding: EdgeInsets.all(imageWidth / 3),
+                                    child: CircularProgressIndicator(),
+                                  );
+                                case LoadState.completed:
+                                  return null;
+                                case LoadState.failed:
+                                  return Icon(Icons.cancel_outlined);
+                              }
+                            },
                           );
                         } else {
                           return Container(
