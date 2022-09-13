@@ -12,7 +12,7 @@ class ImageList extends StatefulWidget {
 }
 
 class _ImageListState extends State<ImageList> {
-  List<XFile> _images = [];
+  List<Uint8List> _images = [];
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +28,16 @@ class _ImageListState extends State<ImageList> {
             // 사진 추가하기 버튼
             onTap: () async {
               final ImagePicker _picker = ImagePicker();
-              final List<XFile>? images = await _picker.pickMultiImage();
+              // image 퀄리티 낮춰주는 옵션도 있음 너무 크면 돈 많이 나갈 수 있음
+              final List<XFile>? images =
+                  await _picker.pickMultiImage(imageQuality: 3);
               if (images != null && images.isNotEmpty) {
                 _images.clear();
-                _images.addAll(images);
+                // map을 이용해서 list를 만들면 왜인지는 모르겠지만 잘 안된다...
+                // images.map((e) async => {_images.add(await (e.readAsBytes()))});
+                images.forEach(((element) async {
+                  _images.add(await element.readAsBytes());
+                }));
                 // setState를 해주지않으면 리스트가 반영이 안됨...
                 setState(() {});
               }
@@ -69,44 +75,32 @@ class _ImageListState extends State<ImageList> {
                     top: common_padding,
                     bottom: common_padding,
                   ),
-                  child: FutureBuilder<Uint8List>(
-                      future: _images[index].readAsBytes(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ExtendedImage.memory(
-                            snapshot.data!,
-                            width: imageWidth,
-                            height: imageWidth,
-                            // 이미지를 박스 크기에 맞춰서 보여준다.
-                            fit: BoxFit.cover,
-                            borderRadius:
-                                BorderRadius.circular(common_padding_sm),
-                            shape: BoxShape.rectangle,
-                            loadStateChanged: (state) {
-                              switch (state.extendedImageLoadState) {
-                                case LoadState.loading:
-                                  return Container(
-                                    width: imageWidth,
-                                    height: imageWidth,
-                                    padding: EdgeInsets.all(imageWidth / 3),
-                                    child: CircularProgressIndicator(),
-                                  );
-                                case LoadState.completed:
-                                  return null;
-                                case LoadState.failed:
-                                  return Icon(Icons.cancel_outlined);
-                              }
-                            },
-                          );
-                        } else {
+                  child: ExtendedImage.memory(
+                    _images[index],
+                    width: imageWidth,
+                    height: imageWidth,
+                    // 이미지를 박스 크기에 맞춰서 보여준다.
+                    fit: BoxFit.cover,
+                    borderRadius: BorderRadius.circular(common_padding_sm),
+                    shape: BoxShape.rectangle,
+                    loadStateChanged: (state) {
+                      switch (state.extendedImageLoadState) {
+                        case LoadState.loading:
                           return Container(
                             width: imageWidth,
                             height: imageWidth,
+                            padding: EdgeInsets.all(imageWidth / 3),
                             child: CircularProgressIndicator(),
                           );
-                        }
-                      }),
+                        case LoadState.completed:
+                          return null;
+                        case LoadState.failed:
+                          return Icon(Icons.cancel_outlined);
+                      }
+                    },
+                  ),
                 ),
+                // 삭제 버튼
                 Positioned(
                   top: 0,
                   right: 0,
@@ -114,7 +108,11 @@ class _ImageListState extends State<ImageList> {
                   height: 40,
                   child: IconButton(
                       padding: EdgeInsets.all(4),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _images.removeAt(index);
+                        });
+                      },
                       icon: Icon(Icons.remove_circle),
                       color: Colors.black38),
                 ),
