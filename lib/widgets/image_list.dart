@@ -3,6 +3,8 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
+import 'package:provider/provider.dart';
 
 class ImageList extends StatefulWidget {
   const ImageList({super.key});
@@ -18,6 +20,8 @@ class _ImageListState extends State<ImageList> {
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
     double imageWidth = _size.width / 3 - (common_padding * 2);
+    SelectImagesProvider selectImagesProvider =
+        context.watch<SelectImagesProvider>();
 
     return SizedBox(
       height: _size.width / 3,
@@ -31,15 +35,9 @@ class _ImageListState extends State<ImageList> {
               // image 퀄리티 낮춰주는 옵션도 있음 너무 크면 돈 많이 나갈 수 있음
               final List<XFile>? images =
                   await _picker.pickMultiImage(imageQuality: 3);
+
               if (images != null && images.isNotEmpty) {
-                _images.clear();
-                // map을 이용해서 list를 만들면 왜인지는 모르겠지만 잘 안된다...
-                // images.map((e) async => {_images.add(await (e.readAsBytes()))});
-                images.forEach(((element) async {
-                  _images.add(await element.readAsBytes());
-                }));
-                // setState를 해주지않으면 리스트가 반영이 안됨...
-                setState(() {});
+                context.read<SelectImagesProvider>().setImages(images);
               }
             },
             child: Padding(
@@ -66,7 +64,7 @@ class _ImageListState extends State<ImageList> {
             ),
           ),
           ...List.generate(
-            _images.length,
+            selectImagesProvider.images.length,
             (index) => Stack(
               children: [
                 Padding(
@@ -76,7 +74,7 @@ class _ImageListState extends State<ImageList> {
                     bottom: common_padding,
                   ),
                   child: ExtendedImage.memory(
-                    _images[index],
+                    selectImagesProvider.images[index],
                     width: imageWidth,
                     height: imageWidth,
                     // 이미지를 박스 크기에 맞춰서 보여준다.
@@ -109,9 +107,7 @@ class _ImageListState extends State<ImageList> {
                   child: IconButton(
                       padding: EdgeInsets.all(4),
                       onPressed: () {
-                        setState(() {
-                          _images.removeAt(index);
-                        });
+                        context.read<SelectImagesProvider>().removeImage(index);
                       },
                       icon: Icon(Icons.remove_circle),
                       color: Colors.black38),

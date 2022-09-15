@@ -1,4 +1,5 @@
 import 'package:carrot_market_by_flutter/provider/category_provider.dart';
+import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
 import 'package:carrot_market_by_flutter/screens/input/category_input_screen.dart';
 import 'package:carrot_market_by_flutter/screens/input/input_sreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,10 +62,10 @@ class Router extends StatelessWidget {
   final userState = UserProvider();
 
   @override
-  Widget build(BuildContext context) =>
-      MultiProvider(
+  Widget build(BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => CategoryProvider())
+          ChangeNotifierProvider(create: (_) => CategoryProvider()),
+          ChangeNotifierProvider(create: (_) => SelectImagesProvider())
         ],
         child: ChangeNotifierProvider<UserProvider>.value(
           value: userState,
