@@ -1,10 +1,15 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/provider/category_provider.dart';
+import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carrot_market_by_flutter/widgets/image_list.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+import '../../utils/logger.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({super.key});
@@ -51,7 +56,19 @@ class _InputScreenState extends State<InputScreen> {
               '완료',
               style: Theme.of(context).textTheme.bodyText2,
             ),
-            onPressed: () => {},
+            onPressed: () async {
+              List<Uint8List> images =
+                  context.read<SelectImagesProvider>().images;
+              Reference ref =
+                  FirebaseStorage.instance.ref('images/padlock.png');
+
+              var metaData = SettableMetadata(contentType: 'image/jpeg');
+
+              if (images.isNotEmpty) {
+                await ref.putData(images[0], metaData);
+              }
+              logger.d('fin!!');
+            },
           )
         ],
       ),

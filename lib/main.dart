@@ -150,18 +150,15 @@ class Router extends StatelessWidget {
       // if the user is not logged in, they need to login
       // final loggedIn = userState.loggedIn;
       // 로그인 하려는 중인가?
-      // logger.d('userState = ${userState.user}');
-      // final loggingIn = state.subloc == '/login';
-      // logger.d('subloc = ${state.subloc}');
-      // if (userState.user == null) return loggingIn ? null : '/login';
-      // // if (loggedIn) return loggingIn ? null : '/login';
-      // logger.d('여기 오나?');
+      final loggingIn = state.subloc == '/login';
+      if (userState.user == null) return loggingIn ? null : '/login';
+      // if (loggedIn) return loggingIn ? null : '/login';
 
-      // // if the user is logged in but still on the login page, send them to
-      // // the home page
-      // if (loggingIn) return '/';
+      // if the user is logged in but still on the login page, send them to
+      // the home page
+      if (loggingIn) return '/';
 
-      // return null;
+      return null;
     },
     refreshListenable: userState,
   );
