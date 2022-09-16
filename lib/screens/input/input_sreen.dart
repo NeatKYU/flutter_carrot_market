@@ -1,6 +1,7 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
+import 'package:carrot_market_by_flutter/repo/image_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
@@ -59,15 +60,11 @@ class _InputScreenState extends State<InputScreen> {
             onPressed: () async {
               List<Uint8List> images =
                   context.read<SelectImagesProvider>().images;
-              Reference ref =
-                  FirebaseStorage.instance.ref('images/padlock.png');
 
-              var metaData = SettableMetadata(contentType: 'image/jpeg');
+              List<String> downloadUrls =
+                  await ImageStroage.UploadImages(images);
 
-              if (images.isNotEmpty) {
-                await ref.putData(images[0], metaData);
-              }
-              logger.d('fin!!');
+              logger.d(downloadUrls);
             },
           )
         ],
