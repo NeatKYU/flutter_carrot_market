@@ -1,23 +1,33 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/repo/item_service.dart';
 import 'package:carrot_market_by_flutter/repo/user_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../model/item_model/item_model.dart';
+
 class ItemsPage extends StatelessWidget {
   const ItemsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Future.delayed(Duration(seconds: 2)),
-      builder: (context, snapshot) {
-        return AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
-          child: (snapshot.connectionState == ConnectionState.done)
-              ? _listView()
-              : _shimmerListView(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        Size size = MediaQuery.of(context).size;
+        final imageSize = size.width / 4;
+
+        return FutureBuilder<List<ItemModel>>(
+          future: ItemService().getItemList(),
+          builder: (context, snapshot) {
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 500),
+              child: (snapshot.hasData && snapshot.data!.isNotEmpty)
+                  ? _listView(snapshot.data!, imageSize)
+                  : _shimmerListView(),
+            );
+          },
         );
       },
     );
@@ -25,10 +35,10 @@ class ItemsPage extends StatelessWidget {
 }
 
 // 원래 보여줘야할 리스트
-ListView _listView() {
+ListView _listView(List<ItemModel> itemList, double imageSize) {
   return ListView.separated(
     padding: EdgeInsets.all(common_padding),
-    itemCount: 10,
+    itemCount: itemList.length,
     separatorBuilder: (context, idnex) {
       return const Divider(
         height: common_padding * 2,
@@ -39,6 +49,7 @@ ListView _listView() {
       );
     },
     itemBuilder: (context, index) {
+      ItemModel item = itemList[index];
       return InkWell(
         onTap: () {
           // 데이터 베이스에 집어넣기~
@@ -48,14 +59,19 @@ ListView _listView() {
           // UserService().firestoreGetTest();
         },
         child: SizedBox(
-          height: 100,
+          height: imageSize,
           child: Row(
             children: [
-              ExtendedImage.network(
-                'https://picsum.photos/100',
-                // 이거 지정 안해주면 보더 적용 안됨
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10),
+              SizedBox(
+                width: imageSize,
+                height: imageSize,
+                child: ExtendedImage.network(
+                  item.imageDownloadUrls[0],
+                  fit: BoxFit.cover,
+                  // 이거 지정 안해주면 보더 적용 안됨
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               const SizedBox(
                 width: common_padding,
@@ -64,9 +80,10 @@ ListView _listView() {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('title', style: Theme.of(context).textTheme.subtitle1),
+                    Text(item.title,
+                        style: Theme.of(context).textTheme.subtitle1),
                     Text('53일전', style: Theme.of(context).textTheme.subtitle2),
-                    Text('5000won'),
+                    Text('${item.price}원'),
                     // row가 내려가게 expanded로 전부 차지하게 해줌
                     Expanded(
                       child: Container(),

@@ -40,8 +40,12 @@ class ItemModel {
     return _$ItemModelFromJson(json, itemKey, reference);
   }
 
-  ItemModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    ItemModel.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
+  factory ItemModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return ItemModel.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
+  }
+
+  factory ItemModel.fromQuerySnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return ItemModel.fromJson(snapshot.data(), snapshot.id, snapshot.reference);
   }
 
   Map<String, dynamic> toJson() => _$ItemModelToJson(this);
