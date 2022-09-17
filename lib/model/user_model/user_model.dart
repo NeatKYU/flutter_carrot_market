@@ -32,8 +32,10 @@ class UserModel {
   }
 
   // usermodel 저장하기 위한 로직
-  UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    UserModel.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
+  factory UserModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return UserModel.fromJson(
+        snapshot.data()!, snapshot.id, snapshot.reference);
   }
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
