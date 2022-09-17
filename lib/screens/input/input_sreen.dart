@@ -21,6 +21,7 @@ class InputScreen extends StatefulWidget {
 
 class _InputScreenState extends State<InputScreen> {
   bool _selectedPrice = false;
+  bool _imageUploadLoading = false;
   TextEditingController _moneyController = TextEditingController();
 
   Widget _divider = Divider(
@@ -58,16 +59,28 @@ class _InputScreenState extends State<InputScreen> {
               style: Theme.of(context).textTheme.bodyText2,
             ),
             onPressed: () async {
+              setState(() {
+                _imageUploadLoading = true;
+              });
               List<Uint8List> images =
                   context.read<SelectImagesProvider>().images;
 
               List<String> downloadUrls =
                   await ImageStroage.UploadImages(images);
 
+              setState(() {
+                _imageUploadLoading = false;
+              });
               logger.d(downloadUrls);
             },
           )
         ],
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, 2),
+          child: _imageUploadLoading
+              ? LinearProgressIndicator(minHeight: 2)
+              : Container(),
+        ),
       ),
       body: Column(
         children: [
