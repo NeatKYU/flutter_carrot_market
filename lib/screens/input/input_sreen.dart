@@ -5,6 +5,8 @@ import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/repo/image_storage.dart';
+import 'package:carrot_market_by_flutter/repo/item_service.dart';
+import 'package:carrot_market_by_flutter/repo/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,14 +44,16 @@ class _InputScreenState extends State<InputScreen> {
     setState(() {
       _imageUploadLoading = true;
     });
-    UserModel userModel = context.read<UserProvider>().userModel!;
-    if (userModel == null) return;
+    UserProvider userProvider = context.read<UserProvider>();
+    if (userProvider.user == null) return;
 
     List<Uint8List> images = context.read<SelectImagesProvider>().images;
     List<String> downloadUrls = await ImageStroage.UploadImages(images);
+    String itemKey =
+        ImageStroage.createKey(FirebaseAuth.instance.currentUser!.uid);
 
     ItemModel _itemModel = ItemModel(
-      itemKey: ImageStroage.createKey(FirebaseAuth.instance.currentUser!.uid),
+      itemKey: itemKey,
       userKey: FirebaseAuth.instance.currentUser!.uid,
       imageDownloadUrls: downloadUrls,
       title: _titleController.text,
@@ -58,14 +62,13 @@ class _InputScreenState extends State<InputScreen> {
           _moneyController.text.replaceAll(',', '').replaceAll('원', '')),
       nego: _selectedPrice,
       detail: _detailController.text,
-      address: userModel.address,
-      geoFirePoint: userModel.geoFirePoint,
+      address: userProvider.userModel!.address,
+      geoFirePoint: userProvider.userModel!.geoFirePoint,
       createdDate: DateTime.now(),
     );
 
-    setState(() {
-      _imageUploadLoading = false;
-    });
+    ItemService().createNewItem(_itemModel.toJson(), itemKey);
+    GoRouter.of(context).go('/');
   }
 
   @override
