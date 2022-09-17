@@ -1,7 +1,11 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
 import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/repo/image_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
@@ -23,6 +27,8 @@ class _InputScreenState extends State<InputScreen> {
   bool _selectedPrice = false;
   bool _imageUploadLoading = false;
   TextEditingController _moneyController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _detailController = TextEditingController();
 
   Widget _divider = Divider(
     color: Colors.grey,
@@ -31,6 +37,36 @@ class _InputScreenState extends State<InputScreen> {
     thickness: 1,
     height: 1,
   );
+
+  void setInputPageValue() async {
+    setState(() {
+      _imageUploadLoading = true;
+    });
+    UserModel userModel = context.read<UserProvider>().userModel!;
+    if (userModel == null) return;
+
+    List<Uint8List> images = context.read<SelectImagesProvider>().images;
+    List<String> downloadUrls = await ImageStroage.UploadImages(images);
+
+    ItemModel _itemModel = ItemModel(
+      itemKey: ImageStroage.createKey(FirebaseAuth.instance.currentUser!.uid),
+      userKey: FirebaseAuth.instance.currentUser!.uid,
+      imageDownloadUrls: downloadUrls,
+      title: _titleController.text,
+      category: context.read<CategoryProvider>().currentCategory,
+      price: int.parse(
+          _moneyController.text.replaceAll(',', '').replaceAll('원', '')),
+      nego: _selectedPrice,
+      detail: _detailController.text,
+      address: userModel.address,
+      geoFirePoint: userModel.geoFirePoint,
+      createdDate: DateTime.now(),
+    );
+
+    setState(() {
+      _imageUploadLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,19 +95,7 @@ class _InputScreenState extends State<InputScreen> {
               style: Theme.of(context).textTheme.bodyText2,
             ),
             onPressed: () async {
-              setState(() {
-                _imageUploadLoading = true;
-              });
-              List<Uint8List> images =
-                  context.read<SelectImagesProvider>().images;
-
-              List<String> downloadUrls =
-                  await ImageStroage.UploadImages(images);
-
-              setState(() {
-                _imageUploadLoading = false;
-              });
-              logger.d(downloadUrls);
+              setInputPageValue();
             },
           )
         ],
@@ -87,6 +111,7 @@ class _InputScreenState extends State<InputScreen> {
           ImageList(),
           _divider,
           TextFormField(
+            controller: _titleController,
             decoration: InputDecoration(
               hintText: '글 제목',
               focusedBorder: UnderlineInputBorder(
@@ -171,6 +196,7 @@ class _InputScreenState extends State<InputScreen> {
           ),
           _divider,
           TextFormField(
+            controller: _detailController,
             // null로 넘겨주면 몇줄을 입력하든 상관없음
             maxLines: null,
             // 가상 키보드의 형식이 multiline으로 변경됨

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -34,7 +35,8 @@ class ItemModel {
     this.reference,
   });
 
-  factory ItemModel.fromJson(Map<String, dynamic> json, String itemKey, DocumentReference reference) {
+  factory ItemModel.fromJson(
+      Map<String, dynamic> json, String itemKey, DocumentReference reference) {
     return _$ItemModelFromJson(json, itemKey, reference);
   }
 
