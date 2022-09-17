@@ -11,12 +11,13 @@ class ImageStroage {
 
     var metaData = SettableMetadata(contentType: 'image/jpeg');
     String userKey = FirebaseAuth.instance.currentUser!.uid;
+    String docString = createKey(userKey);
 
     List<String> downloadUrls = [];
 
     for (int i = 0; i < images.length; i++) {
       Reference ref =
-          FirebaseStorage.instance.ref('images/${createKey(userKey)}/${i}.png');
+          FirebaseStorage.instance.ref('images/${docString}/${i}.png');
       await ref.putData(images[i], metaData);
 
       downloadUrls.add(await ref.getDownloadURL());
