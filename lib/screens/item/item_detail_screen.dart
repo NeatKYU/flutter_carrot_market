@@ -35,6 +35,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             builder: (context, constraints) {
               Size _size = MediaQuery.of(context).size;
               int _itemLength = itemModel.imageDownloadUrls.length;
+
               return Scaffold(
                 body: CustomScrollView(
                   slivers: [
@@ -43,37 +44,27 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       pinned: true,
                       foregroundColor: Colors.black,
                       flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          children: [
-                            PageView.builder(
-                              controller: _pageController,
-                              itemBuilder: (context, index) {
-                                return ExtendedImage.network(
-                                  itemModel.imageDownloadUrls[index],
-                                  fit: BoxFit.cover,
-                                );
-                              },
-                              itemCount: _itemLength,
-                            ),
-                            Positioned(
-                              bottom: common_padding,
-                              left: 0,
-                              right: 0,
-                              child: Center(
-                                child: SmoothPageIndicator(
-                                    controller:
-                                        _pageController, // PageController
-                                    count: _itemLength,
-                                    effect: WormEffect(
-                                      dotHeight: 10,
-                                      dotWidth: 10,
-                                      activeDotColor:
-                                          Theme.of(context).primaryColor,
-                                    ), // your preferred effect
-                                    onDotClicked: (index) {}),
-                              ),
-                            )
-                          ],
+                        // 안드로이드 일 경우 타이틀이 왼쪽으로 치우쳐짐이 있을 수 있음
+                        centerTitle: true,
+                        title: SmoothPageIndicator(
+                          controller: _pageController, // PageController
+                          count: _itemLength,
+                          effect: WormEffect(
+                            dotHeight: 10,
+                            dotWidth: 10,
+                            activeDotColor: Theme.of(context).primaryColor,
+                          ), // your preferred effect
+                          onDotClicked: (index) {},
+                        ),
+                        background: PageView.builder(
+                          controller: _pageController,
+                          itemBuilder: (context, index) {
+                            return ExtendedImage.network(
+                              itemModel.imageDownloadUrls[index],
+                              fit: BoxFit.cover,
+                            );
+                          },
+                          itemCount: _itemLength,
                         ),
                       ),
                     ),
