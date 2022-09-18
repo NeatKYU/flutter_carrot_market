@@ -1,9 +1,9 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/repo/item_service.dart';
-import 'package:carrot_market_by_flutter/repo/user_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../model/item_model/item_model.dart';
@@ -57,6 +57,9 @@ ListView _listView(List<ItemModel> itemList, double imageSize) {
 
           // 데이터 베이스에서 가져오기~
           // UserService().firestoreGetTest();
+
+          // go item detail page
+          GoRouter.of(context).go('/item/${item.itemKey}');
         },
         child: SizedBox(
           height: imageSize,

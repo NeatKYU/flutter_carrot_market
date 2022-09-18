@@ -1,7 +1,9 @@
+import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
 import 'package:carrot_market_by_flutter/provider/category_provider.dart';
 import 'package:carrot_market_by_flutter/provider/select_images_provider.dart';
 import 'package:carrot_market_by_flutter/screens/input/category_input_screen.dart';
 import 'package:carrot_market_by_flutter/screens/input/input_sreen.dart';
+import 'package:carrot_market_by_flutter/screens/item/item_detail_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -135,6 +137,12 @@ class Router extends StatelessWidget {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: 'item/:item_key',
+            builder: (BuildContext context, GoRouterState state) {
+              return ItemDetailScreen(state.params['item_key']!);
+            },
           ),
         ],
       ),
