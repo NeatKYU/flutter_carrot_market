@@ -72,6 +72,56 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               return Stack(
                 children: [
                   Scaffold(
+                    bottomNavigationBar: SafeArea(
+                      bottom: true,
+                      top: false,
+                      child: Container(
+                        height: 80,
+                        padding: EdgeInsets.all(common_padding_sm),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.favorite_border_outlined,
+                              ),
+                            ),
+                            VerticalDivider(
+                              color: Colors.grey,
+                              indent: 2,
+                              endIndent: 2,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('45000원'),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '가격제안불가',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Expanded(child: Container()),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('채팅으로 거래하기'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     body: CustomScrollView(
                       controller: _scrollController,
                       slivers: [
@@ -104,14 +154,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             ),
                           ),
                         ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            height: _size!.height * 2,
-                            child: Center(
-                              child: Text(widget.itemKey),
-                            ),
-                          ),
-                        )
+                        // SliverToBoxAdapter(
+                        //   child: Container(
+                        //     height: _size!.height * 2,
+                        //     child: Center(
+                        //       child: Text(widget.itemKey),
+                        //     ),
+                        //   ),
+                        // )
+                        SliverList(
+                          delegate: SliverChildListDelegate([
+                            _userSection(),
+                          ]),
+                        ),
                       ],
                     ),
                   ),
@@ -164,6 +219,87 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           return Container();
         }
       },
+    );
+  }
+
+  Widget _userSection() {
+    return Padding(
+      padding: const EdgeInsets.all(common_padding),
+      child: Row(
+        children: [
+          ExtendedImage.network(
+            'https://picsum.photos/50',
+            width: _size!.width / 10,
+            height: _size!.width / 10,
+            fit: BoxFit.cover,
+            shape: BoxShape.circle,
+          ),
+          SizedBox(
+            width: common_padding_sm,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('우치치', style: TextStyle(fontSize: 16)),
+              SizedBox(
+                height: 10,
+              ),
+              Text('배곧동'),
+            ],
+          ),
+          Expanded(child: Container()),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 50,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                            '37.3 C',
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(1),
+                          child: LinearProgressIndicator(
+                            minHeight: 4,
+                            value: 0.373,
+                            color: Colors.blueAccent,
+                            backgroundColor: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Icon(
+                    Icons.person,
+                    size: 40,
+                    color: Colors.blueAccent,
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                '매너온도',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
