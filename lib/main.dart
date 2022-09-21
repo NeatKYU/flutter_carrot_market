@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: FutureBuilder(
         future: Future.delayed(
-          Duration(seconds: 3),
+          Duration(seconds: 0),
           () => 100,
         ),
         builder: (context, snapshot) {
@@ -78,6 +78,7 @@ class Router extends StatelessWidget {
               hintColor: Colors.grey,
               textTheme: const TextTheme(
                 button: TextStyle(color: Colors.white),
+                headline1: TextStyle(color: Colors.black, fontSize: 20),
                 subtitle1: TextStyle(color: Colors.blueGrey, fontSize: 15),
                 subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
                 bodyText2: TextStyle(

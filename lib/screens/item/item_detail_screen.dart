@@ -55,6 +55,22 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     super.dispose();
   }
 
+  Widget _divider() {
+    return Divider(
+      indent: common_padding,
+      endIndent: common_padding,
+      height: 1,
+      color: Colors.grey,
+    );
+  }
+
+  Widget _gap(double paramWidth, double paramHeight) {
+    return SizedBox(
+      width: paramWidth,
+      height: paramHeight,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ItemModel>(
@@ -165,6 +181,69 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         SliverList(
                           delegate: SliverChildListDelegate([
                             _userSection(),
+                            _divider(),
+                            Padding(
+                              padding: const EdgeInsets.all(common_padding),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '제목 입니다. 이거 사세요!',
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  ),
+                                  _gap(0, 10),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '스포츠 레저',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                      ),
+                                      _gap(5, 0),
+                                      Text(
+                                        '2분전',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                      ),
+                                    ],
+                                  ),
+                                  _gap(0, 10),
+                                  Text(
+                                    '글의 내용',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
+                                  ),
+                                  _gap(0, 10),
+                                  Text(
+                                    '조회 33',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            _divider(),
+                            Padding(
+                              padding: const EdgeInsets.all(common_padding_sm),
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    '이 게시글 신고하기',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              ),
+                            ),
                           ]),
                         ),
                       ],
@@ -234,16 +313,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             fit: BoxFit.cover,
             shape: BoxShape.circle,
           ),
-          SizedBox(
-            width: common_padding_sm,
-          ),
+          _gap(common_padding, 0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('우치치', style: TextStyle(fontSize: 16)),
-              SizedBox(
-                height: 10,
-              ),
+              _gap(0, 10),
               Text('배곧동'),
             ],
           ),
@@ -264,9 +339,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             style: TextStyle(color: Colors.blueAccent),
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        _gap(0, 10),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(1),
                           child: LinearProgressIndicator(
@@ -279,9 +352,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  _gap(10, 0),
                   Icon(
                     Icons.person,
                     size: 40,
@@ -289,9 +360,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   )
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
+              _gap(0, 10),
               Text(
                 '매너온도',
                 style: TextStyle(decoration: TextDecoration.underline),
