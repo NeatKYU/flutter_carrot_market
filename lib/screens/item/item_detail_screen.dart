@@ -1,6 +1,7 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
 import 'package:carrot_market_by_flutter/repo/item_service.dart';
+import 'package:carrot_market_by_flutter/screens/item/smilar_item.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -244,7 +245,47 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 ),
                               ),
                             ),
+                            _divider(),
+                            Padding(
+                              padding: const EdgeInsets.all(common_padding),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '무무님의 판매상품',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Expanded(child: Container()),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      '더보기',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
                           ]),
+                        ),
+                        SliverPadding(
+                          padding: EdgeInsets.all(common_padding_sm),
+                          sliver: SliverGrid.count(
+                            crossAxisCount: 2,
+                            childAspectRatio: 5/6,
+                            mainAxisSpacing: common_padding_sm,
+                            crossAxisSpacing: common_padding_sm,
+                            children: List.generate(
+                              10,
+                              (index) => SmilarItem(),
+                            ),
+                          ),
                         ),
                       ],
                     ),
