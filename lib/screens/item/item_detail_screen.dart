@@ -2,6 +2,7 @@ import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
 import 'package:carrot_market_by_flutter/repo/item_service.dart';
 import 'package:carrot_market_by_flutter/screens/item/smilar_item.dart';
+import 'package:carrot_market_by_flutter/utils/calculation_time.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -189,7 +190,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '제목 입니다. 이거 사세요!',
+                                    itemModel.title,
                                     style:
                                         Theme.of(context).textTheme.headline1,
                                   ),
@@ -197,14 +198,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        '스포츠 레저',
+                                        itemModel.category,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2,
                                       ),
                                       _gap(5, 0),
                                       Text(
-                                        '2분전',
+                                        CalculationTime.getTimeDiff(
+                                          itemModel.createdDate,
+                                        ),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2,
@@ -213,7 +216,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                   ),
                                   _gap(0, 10),
                                   Text(
-                                    '글의 내용',
+                                    itemModel.detail,
                                     style:
                                         Theme.of(context).textTheme.subtitle1,
                                   ),
@@ -278,7 +281,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           padding: EdgeInsets.all(common_padding_sm),
                           sliver: SliverGrid.count(
                             crossAxisCount: 2,
-                            childAspectRatio: 5/6,
+                            childAspectRatio: 5 / 6,
                             mainAxisSpacing: common_padding_sm,
                             crossAxisSpacing: common_padding_sm,
                             children: List.generate(
