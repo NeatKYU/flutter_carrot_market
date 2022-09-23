@@ -27,6 +27,14 @@ ItemModel _$ItemModelFromJson(Map<String, dynamic> json, itemKey, reference) =>
       reference: reference,
     );
 
+ItemModel _$ItemModelFromMinJson(Map<String, dynamic> json, itemKey) =>
+    ItemModel.min(
+      imageDownloadUrls:
+          (json['imageDownloadUrls'] as List<String>).sublist(0, 1),
+      title: json['title'] ?? "",
+      price: json['price'] ?? 0,
+    );
+
 Map<String, dynamic> _$ItemModelToJson(ItemModel instance) => <String, dynamic>{
       // 'itemKey': instance.itemKey,
       'userKey': instance.userKey,
@@ -40,4 +48,11 @@ Map<String, dynamic> _$ItemModelToJson(ItemModel instance) => <String, dynamic>{
       'geoFirePoint': instance.geoFirePoint.data,
       'createdDate': instance.createdDate,
       // 'reference': instance.reference,
+    };
+
+Map<String, dynamic> _$ItemModelToMinJson(ItemModel instance) =>
+    <String, dynamic>{
+      'imageDownloadUrls': instance.imageDownloadUrls,
+      'title': instance.title,
+      'price': instance.price,
     };

@@ -35,18 +35,33 @@ class ItemModel {
     this.reference,
   });
 
+  ItemModel.min({
+    required this.imageDownloadUrls,
+    required this.title,
+    required this.price,
+  });
+
   factory ItemModel.fromJson(
       Map<String, dynamic> json, String itemKey, DocumentReference reference) {
     return _$ItemModelFromJson(json, itemKey, reference);
   }
 
-  factory ItemModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    return ItemModel.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
+  factory ItemModel.fromMinJson(
+      Map<String, dynamic> json, String itemKey, DocumentReference reference) {
+    return _$ItemModelFromMinJson(json, itemKey);
   }
 
-  factory ItemModel.fromQuerySnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+  factory ItemModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return ItemModel.fromJson(
+        snapshot.data()!, snapshot.id, snapshot.reference);
+  }
+
+  factory ItemModel.fromQuerySnapshot(
+      QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
     return ItemModel.fromJson(snapshot.data(), snapshot.id, snapshot.reference);
   }
 
   Map<String, dynamic> toJson() => _$ItemModelToJson(this);
+  Map<String, dynamic> toMinJson() => _$ItemModelToMinJson(this);
 }
