@@ -57,4 +57,28 @@ class ItemService {
 
     return items;
   }
+
+  Future<List<ItemModel>> getUserItemList(
+      String userKey, String itemKey) async {
+    CollectionReference<Map<String, dynamic>> collectionReference =
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userKey)
+            .collection('items');
+
+    QuerySnapshot<Map<String, dynamic>> snapshots =
+        await collectionReference.get();
+
+    List<ItemModel> items = [];
+
+    for (int i = 0; i < snapshots.size; i++) {
+      ItemModel itemModel = ItemModel.fromQuerySnapshot(snapshots.docs[i]);
+      // 자기 자신 게시글 제거
+      if (itemModel.itemKey != itemKey) {
+        items.add(itemModel);
+      }
+    }
+
+    return items;
+  }
 }

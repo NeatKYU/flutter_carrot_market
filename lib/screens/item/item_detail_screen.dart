@@ -6,7 +6,9 @@ import 'package:carrot_market_by_flutter/utils/calculation_time.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   final String itemKey;
@@ -86,6 +88,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               // appbar 위 부분에 있는 status bar의 크기를 구함
               _statusBarHeight = MediaQuery.of(context).padding.top;
               int _itemLength = itemModel.imageDownloadUrls.length;
+              UserProvider _userProvider = context.read<UserProvider>();
 
               return Stack(
                 children: [
@@ -277,17 +280,30 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             )
                           ]),
                         ),
-                        SliverPadding(
-                          padding: EdgeInsets.all(common_padding_sm),
-                          sliver: SliverGrid.count(
-                            crossAxisCount: 2,
-                            childAspectRatio: 5 / 6,
-                            mainAxisSpacing: common_padding_sm,
-                            crossAxisSpacing: common_padding_sm,
-                            children: List.generate(
-                              10,
-                              (index) => SmilarItem(),
-                            ),
+                        SliverToBoxAdapter(
+                          child: FutureBuilder<List<ItemModel>>(
+                            future: ItemService().getUserItemList(
+                                _userProvider.user!.uid, widget.itemKey),
+                            builder: ((context, snapshot) {
+                              if (snapshot.hasData) {
+                                return GridView.count(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: common_padding),
+                                  // 이거 안해주면 에러 왕창남
+                                  shrinkWrap: true,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 5 / 6,
+                                  mainAxisSpacing: common_padding_sm,
+                                  crossAxisSpacing: common_padding_sm,
+                                  children: List.generate(
+                                    snapshot.data!.length,
+                                    (index) =>
+                                        SmilarItem(snapshot.data![index]),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            }),
                           ),
                         ),
                       ],

@@ -1,10 +1,10 @@
+import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class SmilarItem extends StatelessWidget {
-  const SmilarItem({super.key});
+  final ItemModel _itemModel;
+  const SmilarItem(this._itemModel, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class SmilarItem extends StatelessWidget {
         AspectRatio(
           aspectRatio: 4 / 3,
           child: ExtendedImage.network(
-            'https://picsum.photos/100',
+            _itemModel.imageDownloadUrls[0],
             fit: BoxFit.cover,
             borderRadius: BorderRadius.circular(8),
             shape: BoxShape.rectangle,
@@ -25,7 +25,7 @@ class SmilarItem extends StatelessWidget {
           height: 10,
         ),
         Text(
-          'title',
+          _itemModel.title,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
@@ -36,7 +36,7 @@ class SmilarItem extends StatelessWidget {
           height: 10,
         ),
         Text(
-          '4500원',
+          _itemModel.price.toString() + '원',
           style: TextStyle(color: Colors.grey),
         ),
       ],
