@@ -1,4 +1,5 @@
 import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -7,15 +8,26 @@ class ItemService {
   factory ItemService() => _itemService;
   ItemService._internal();
 
-  Future createNewItem(Map<String, dynamic> json, String itemKey) async {
-    DocumentReference<Map<String, dynamic>> documentReference =
+  Future createNewItem(
+      ItemModel itemModel, String itemKey, String userKey) async {
+    DocumentReference<Map<String, dynamic>> itemDocReference =
         FirebaseFirestore.instance.collection('items').doc(itemKey);
+    DocumentReference<Map<String, dynamic>> uesrItemDocReference =
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userKey)
+            .collection('items')
+            .doc(itemKey);
 
     // 아이디가 있는지 없는지 확인 용
-    final DocumentSnapshot documentSnapshot = await documentReference.get();
+    final DocumentSnapshot documentSnapshot = await itemDocReference.get();
 
     if (!documentSnapshot.exists) {
-      documentReference.set(json);
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        // transaction을 사용하면 여러개를 한번에 처리가능!!
+        transaction.set(itemDocReference, itemModel.toJson());
+        transaction.set(uesrItemDocReference, itemModel.toMinJson());
+      });
     }
   }
 

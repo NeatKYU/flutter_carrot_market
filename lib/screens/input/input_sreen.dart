@@ -67,7 +67,7 @@ class _InputScreenState extends State<InputScreen> {
       createdDate: DateTime.now(),
     );
 
-    ItemService().createNewItem(_itemModel.toJson(), itemKey);
+    ItemService().createNewItem(_itemModel, itemKey, userProvider.user!.uid);
     GoRouter.of(context).go('/');
   }
 
