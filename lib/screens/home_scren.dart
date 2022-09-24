@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/screens/home/map_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _bottomNaviIndex,
         children: [
           ItemsPage(),
-          Container(color: Colors.amberAccent),
+          MapPage(),
           Container(color: Colors.cyan),
           Container(color: Colors.redAccent),
         ],
