@@ -1,22 +1,24 @@
 import 'dart:math';
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:map/map.dart';
 import 'package:latlng/latlng.dart';
+import 'package:provider/provider.dart';
+
 // 아래 사이트 참고
 // https://github.com/xclud/flutter_map/blob/main/example/lib/pages/raster_map_page.dart
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final UserModel _userModel;
+  const MapPage(this._userModel, {super.key});
 
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  final controller = MapController(
-    location: const LatLng(0, 0),
-    zoom: 2,
-  );
+  late final controller;
 
   Offset? _dragStart;
   double _scaleStart = 1.0;
@@ -26,6 +28,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details, MapTransformer transformer) {
+    // 스케일의 차이만큼 줌 하기위한 설정
     final scaleDiff = details.scale - _scaleStart;
     _scaleStart = details.scale;
 
@@ -57,6 +60,15 @@ class _MapPageState extends State<MapPage> {
       transformer.drag(diff.dx, diff.dy);
       setState(() {});
     }
+  }
+
+  @override
+  void initState() {
+    controller = MapController(
+      location: LatLng(widget._userModel.geoFirePoint.latitude, widget._userModel.geoFirePoint.longitude),
+      zoom: 16,
+    );
+    super.initState();
   }
 
   @override

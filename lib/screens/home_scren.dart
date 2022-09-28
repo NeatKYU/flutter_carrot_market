@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _bottomNaviIndex,
         children: [
           ItemsPage(),
-          MapPage(),
+          MapPage(context.read<UserProvider>().userModel!),
           Container(color: Colors.cyan),
           Container(color: Colors.redAccent),
         ],
