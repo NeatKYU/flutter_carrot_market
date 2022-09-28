@@ -1,4 +1,3 @@
-import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
