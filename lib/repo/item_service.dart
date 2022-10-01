@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
-import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:latlng/latlng.dart';
 
 class ItemService {
   static final ItemService _itemService = ItemService._internal();
@@ -77,6 +79,48 @@ class ItemService {
       if (itemModel.itemKey != itemKey) {
         items.add(itemModel);
       }
+    }
+
+    return items;
+  }
+
+  Future<List<ItemModel>> getNearByItems(String userKey, LatLng latlng) async {
+    final geo = Geoflutterfire();
+    // DocumentReference<Map<String, dynamic>> itemDocReference =
+    //     FirebaseFirestore.instance.collection('items').doc();
+
+    final itemCol = FirebaseFirestore.instance.collection('items');
+
+    GeoFirePoint center = GeoFirePoint(latlng.latitude, latlng.longitude);
+    // 지도상에서 보일 반경
+    double radius = 20;
+    String field = 'geoFirePoint';
+
+    List<ItemModel> items = [];
+    List<DocumentSnapshot<Object?>> snapshots = await geo
+        .collection(collectionRef: itemCol)
+        .within(
+          center: center,
+          radius: radius,
+          field: field,
+        )
+        .first;
+    print(snapshots);
+    // Stream<List<DocumentSnapshot>> stream = geo
+    //     .collection(collectionRef: itemCol)
+    //     .within(center: center, radius: radius, field: field, strictMode: true);
+
+    // stream.listen((List<DocumentSnapshot> documentList) {
+    //   print("Printing DocumentList Data:");
+    //   print(documentList[0]!.data());
+    //   for (int i = 0; i < documentList.length; i++) {
+    //     ItemModel itemModel = ItemModel.fromSnapshot(documentList[i].data());
+    //   }
+    // });
+    for (int i = 0; i < snapshots.length; i++) {
+      ItemModel itemModel = ItemModel.fromSnapshot(
+          snapshots[i] as DocumentSnapshot<Map<String, dynamic>>);
+      items.add(itemModel);
     }
 
     return items;
