@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
 import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
 import 'package:carrot_market_by_flutter/repo/item_service.dart';
 import 'package:carrot_market_by_flutter/utils/logger.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:map/map.dart';
 import 'package:latlng/latlng.dart';
 
@@ -63,18 +65,26 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  Widget _myLocation(Offset offset, {Color color = Colors.red}) {
+  Widget _myLocation(Offset offset, ItemModel item,
+      {Color color = Colors.red}) {
     // offset으로 처리하지만 지도를 확대하거나 축소하면 위치가 달라지는 문제가 존재함
     return Positioned(
       left: offset.dx,
       top: offset.dy,
       width: 24,
       height: 24,
-      child: Align(
-        alignment: Alignment.center,
-        child: Icon(
-          Icons.location_on,
-          color: color,
+      child: InkWell(
+        onTap: () {
+          GoRouter.of(context).go('/item/' + item.itemKey);
+        },
+        child: Align(
+          alignment: Alignment.center,
+          child: ExtendedImage.network(
+            item.imageDownloadUrls[0],
+            borderRadius: BorderRadius.circular(50.0),
+            fit: BoxFit.cover,
+            shape: BoxShape.rectangle,
+          ),
         ),
       ),
     );
@@ -114,7 +124,7 @@ class _MapPageState extends State<MapPage> {
                 snapshot.data!.forEach((item) {
                   final offset = transformer.toOffset(LatLng(
                       item.geoFirePoint.latitude, item.geoFirePoint.longitude));
-                  nearByItems.add(_myLocation(offset));
+                  nearByItems.add(_myLocation(offset, item));
                 });
               }
 
@@ -149,7 +159,7 @@ class _MapPageState extends State<MapPage> {
                       },
                     ),
                   ),
-                  _myLocation(location),
+                  // _myLocation(location,),
                   ...nearByItems,
                 ],
               );

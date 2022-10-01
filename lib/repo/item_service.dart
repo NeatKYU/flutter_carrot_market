@@ -105,18 +105,7 @@ class ItemService {
           field: field,
         )
         .first;
-    print(snapshots);
-    // Stream<List<DocumentSnapshot>> stream = geo
-    //     .collection(collectionRef: itemCol)
-    //     .within(center: center, radius: radius, field: field, strictMode: true);
-
-    // stream.listen((List<DocumentSnapshot> documentList) {
-    //   print("Printing DocumentList Data:");
-    //   print(documentList[0]!.data());
-    //   for (int i = 0; i < documentList.length; i++) {
-    //     ItemModel itemModel = ItemModel.fromSnapshot(documentList[i].data());
-    //   }
-    // });
+    
     for (int i = 0; i < snapshots.length; i++) {
       ItemModel itemModel = ItemModel.fromSnapshot(
           snapshots[i] as DocumentSnapshot<Map<String, dynamic>>);
