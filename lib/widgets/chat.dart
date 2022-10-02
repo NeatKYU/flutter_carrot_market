@@ -1,14 +1,17 @@
+import 'package:carrot_market_by_flutter/model/chat_model/chat_model.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class ChatWidget extends StatelessWidget {
   final Size size;
   final bool isMine;
+  final ChatModel chatModel;
 
   const ChatWidget({
     super.key,
     required this.size,
     required this.isMine,
+    required this.chatModel,
   });
 
   @override
@@ -30,7 +33,7 @@ class ChatWidget extends StatelessWidget {
             maxWidth: size.width * 0.5,
             minHeight: 40,
           ),
-          child: Text('alksfdsflajdsfkladjsfklasdklfjlckxzjvklxzjvkladsf'),
+          child: Text(chatModel.msg),
           decoration: BoxDecoration(
             color: Colors.greenAccent,
             borderRadius: BorderRadius.only(
@@ -67,7 +70,7 @@ class ChatWidget extends StatelessWidget {
                 maxWidth: size.width * 0.5,
                 minHeight: 40,
               ),
-              child: Text('alksfdsflajdsfkladjsfklasdklfjlckxzjvklxzjvkladsf'),
+              child: Text(chatModel.msg),
               decoration: BoxDecoration(
                 color: Colors.grey,
                 borderRadius: BorderRadius.only(

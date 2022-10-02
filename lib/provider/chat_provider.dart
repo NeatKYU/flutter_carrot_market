@@ -21,6 +21,7 @@ class ChatProvider extends ChangeNotifier {
         });
       } else {
         // 마지막? 채팅기록 가져와서 원래있던 리스트에 붙이기
+        if(_chatList[0].reference == null) _chatList.removeAt(0);
         ChatService()
             .getLatestChatList(_chatroomKey, _chatList[0].reference!)
             .then((latestChatList) {
@@ -30,4 +31,16 @@ class ChatProvider extends ChangeNotifier {
       }
     });
   }
+
+  // 채팅이 바로바로 뜨도록 일단 리스트에 넣어주고 그다음에 디비에 넣어준다.
+  void addNewChat(ChatModel chatModel) {
+    _chatList.insert(0, chatModel);
+    notifyListeners();
+
+    ChatService().createNewChat(_chatroomKey, chatModel);
+  }
+
+  List<ChatModel> get chatList => _chatList;
+  ChatroomModel get chatroomModel => _chatroomModel;
+  String get chatroomKey => _chatroomKey;
 }

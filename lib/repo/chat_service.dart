@@ -92,8 +92,8 @@ class ChatService {
         .collection('chatrooms')
         .doc(chatroomKey)
         .collection('chats')
-        .endAtDocument(await currentDocRef.get())
         .orderBy('createDate', descending: true)
+        .endBeforeDocument(await currentDocRef.get())
         .get();
 
     List<ChatModel> chatList = [];
@@ -114,8 +114,8 @@ class ChatService {
         .collection('chatrooms')
         .doc(chatroomKey)
         .collection('chats')
-        .startAfterDocument(await oldDocRef.get())
         .orderBy('createDate', descending: true)
+        .startAfterDocument(await oldDocRef.get())
         .limit(10)
         .get();
 
