@@ -9,6 +9,7 @@ import 'package:carrot_market_by_flutter/utils/calculation_time.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
@@ -63,7 +64,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   }
 
   // 채팅으로 거래하기 시 채팅룸 생성
-  void _goToChatroom(ItemModel itemModel, UserModel userModel) {
+  void _goToChatroom(ItemModel itemModel, UserModel userModel) async {
     String chatroomKey =
         ChatroomModel.createKey(userModel.userKey, itemModel.itemKey);
 
@@ -84,7 +85,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       sellerKey: itemModel.itemKey,
     );
 
-    ChatService().createNewChatroom(_chatroomModel);
+    await ChatService().createNewChatroom(_chatroomModel);
+
+    GoRouter.of(context).go('/item/${itemModel.itemKey}/$chatroomKey');
   }
 
   Widget _divider() {
