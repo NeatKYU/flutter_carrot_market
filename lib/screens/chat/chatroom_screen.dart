@@ -1,4 +1,5 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/widgets/chat.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class ChatroomScreen extends StatefulWidget {
 class _ChatroomScreenState extends State<ChatroomScreen> {
   @override
   Widget build(BuildContext context) {
+    Size _size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('chat room'),
@@ -51,14 +53,24 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
               child: TextButton.icon(
                 icon: Icon(Icons.edit),
                 label: Text('후기 남기기'),
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
               ),
             ),
             Expanded(
-              child: Center(
-                child: Text(widget.chatroomKey),
+              child: Padding(
+                padding: const EdgeInsets.all(common_padding),
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return ChatWidget(
+                      size: _size,
+                      isMine: index % 2 == 0,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 12);
+                  },
+                  itemCount: 10,
+                ),
               ),
             ),
             Padding(
