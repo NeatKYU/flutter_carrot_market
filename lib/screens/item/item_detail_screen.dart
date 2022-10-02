@@ -1,5 +1,8 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/model/chatroom_model/chatroom_model.dart';
 import 'package:carrot_market_by_flutter/model/item_model/item_model.dart';
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
+import 'package:carrot_market_by_flutter/repo/chat_service.dart';
 import 'package:carrot_market_by_flutter/repo/item_service.dart';
 import 'package:carrot_market_by_flutter/screens/item/smilar_item.dart';
 import 'package:carrot_market_by_flutter/utils/calculation_time.dart';
@@ -57,6 +60,31 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  // 채팅으로 거래하기 시 채팅룸 생성
+  void _goToChatroom(ItemModel itemModel, UserModel userModel) {
+    String chatroomKey =
+        ChatroomModel.createKey(userModel.userKey, itemModel.itemKey);
+
+    ChatroomModel _chatroomModel = ChatroomModel(
+      chatroomKey: chatroomKey,
+      itemImage: itemModel.imageDownloadUrls[0],
+      itemKey: itemModel.itemKey,
+      itemAddress: itemModel.address,
+      itemPrice: itemModel.price,
+      itemTitle: itemModel.title,
+      geoFirePoint: itemModel.geoFirePoint,
+      buyerKey: userModel.userKey,
+      lastMsg: "",
+      lastMsgTime: DateTime.now(),
+      lastMsgUserKey: "",
+      buyerImage: "https://picsum.photos/50",
+      sellerImage: "https://picsum.photos/50",
+      sellerKey: itemModel.itemKey,
+    );
+
+    ChatService().createNewChatroom(_chatroomModel);
   }
 
   Widget _divider() {
@@ -136,7 +164,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             ),
                             Expanded(child: Container()),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _goToChatroom(
+                                    itemModel, _userProvider.userModel!);
+                              },
                               child: Text('채팅으로 거래하기'),
                             ),
                           ],
