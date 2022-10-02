@@ -58,8 +58,8 @@ class ChatroomModel {
         snapshot.data(), snapshot.id, snapshot.reference);
   }
 
-  static String createKey(String buyer, String itemKey) {
-    return '${itemKey}_${buyer}';
+  static String createKey(String buyerKey, String itemKey) {
+    return '${itemKey}_${buyerKey}';
   }
 
   Map<String, dynamic> toJson() => _$ChatroomToJson(this);
