@@ -128,4 +128,34 @@ class ChatService {
 
     return chatList;
   }
+
+  // 내가 속한 채팅룸의 리스트를 가져와서 채팅 페이지에 뿌려줄 떄 사용
+  Future<List<ChatroomModel>> getMyChatroomList(String myUserKey) async {
+    List<ChatroomModel> chatroomList = [];
+
+    QuerySnapshot<Map<String, dynamic>> buyingList =
+        await FirebaseFirestore.instance
+            .collection('chatrooms')
+            // 내 키값과 buyer로 등록된 키 값이 같으면 가져온다. 즉, 내가 buyer인 채팅룸 리스트
+            .where('buyerKey', isEqualTo: myUserKey)
+            .get();
+
+    QuerySnapshot<Map<String, dynamic>> sellingList =
+        await FirebaseFirestore.instance
+            .collection('chatrooms')
+            // 내 키값과 seller로 등록된 키 값이 같으면 가져온다. 즉, 내가 seller 채팅룸 리스트
+            .where('sellerKey', isEqualTo: myUserKey)
+            .get();
+
+    buyingList.docs.forEach((chatroom) {
+      chatroomList.add(ChatroomModel.fromQuerySnapshot(chatroom));
+    });
+    sellingList.docs.forEach((chatroom) {
+      chatroomList.add(ChatroomModel.fromQuerySnapshot(chatroom));
+    });
+
+    chatroomList.sort(((a, b) => a.lastMsgTime.compareTo(b.lastMsgTime)));
+
+    return chatroomList;
+  }
 }
