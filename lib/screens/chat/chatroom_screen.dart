@@ -1,7 +1,12 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/model/chat_model/chat_model.dart';
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
+import 'package:carrot_market_by_flutter/repo/chat_service.dart';
 import 'package:carrot_market_by_flutter/widgets/chat.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatroomScreen extends StatefulWidget {
   String chatroomKey;
@@ -12,9 +17,13 @@ class ChatroomScreen extends StatefulWidget {
 }
 
 class _ChatroomScreenState extends State<ChatroomScreen> {
+  TextEditingController _sendMsgController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
+    UserModel _userModel = context.read<UserProvider>().userModel!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('chat room'),
@@ -85,6 +94,7 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _sendMsgController,
                       decoration: InputDecoration(
                           hintText: '메시지를 입력하세요.',
                           isDense: true,
@@ -102,7 +112,18 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      ChatModel chatModel = ChatModel(
+                        createDate: DateTime.now(),
+                        msg: _sendMsgController.text,
+                        userKey: _userModel.userKey,
+                      );
+
+                      await ChatService()
+                          .createNewChat(widget.chatroomKey, chatModel);
+
+                      _sendMsgController.clear();
+                    },
                     icon: Icon(Icons.send),
                     color: Colors.grey,
                   ),

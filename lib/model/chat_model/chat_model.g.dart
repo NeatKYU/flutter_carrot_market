@@ -8,9 +8,8 @@ part of 'chat_model.dart';
 
 ChatModel _$ChatModelFromJson(Map<String, dynamic> json, chatKey, reference) =>
     ChatModel(
-      chatKey: chatKey,
       msg: json['msg'] ?? "",
-      createDate: json['createDate'] ?? "",
+      createDate: json['createDate'] ?? DateTime.now(),
       userKey: json['userKey'] ?? "",
       reference: reference,
     );

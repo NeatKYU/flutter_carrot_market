@@ -5,14 +5,13 @@ part 'chat_model.g.dart';
 
 @JsonSerializable()
 class ChatModel {
-  late String chatKey;
+  String? chatKey;
   late String msg;
-  late String createDate;
+  late DateTime createDate;
   late String userKey;
   DocumentReference? reference;
 
   ChatModel({
-    required this.chatKey,
     required this.msg,
     required this.createDate,
     required this.userKey,
