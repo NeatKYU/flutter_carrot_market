@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/shared_pref_keys.dart';
-import '../utils/logger.dart';
 
 class UserProvider extends ChangeNotifier {
   User? _user;
