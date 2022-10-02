@@ -1,3 +1,4 @@
+import 'package:carrot_market_by_flutter/screens/chat/chat_list_screen.dart';
 import 'package:carrot_market_by_flutter/screens/home/map_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ItemsPage(),
           MapPage(context.read<UserProvider>().userModel!),
-          Container(color: Colors.cyan),
+          ChatListScreen(
+            userKey: context.read<UserProvider>().userModel!.userKey,
+          ),
           Container(color: Colors.redAccent),
         ],
       ),
