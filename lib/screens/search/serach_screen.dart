@@ -8,6 +8,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +19,10 @@ class _SearchScreenState extends State<SearchScreen> {
           padding: const EdgeInsets.only(right: 8),
           child: Container(
             child: TextFormField(
+              controller: _searchController,
+              onFieldSubmitted: (value) {
+                setState(() {});
+              },
               decoration: InputDecoration(
                 isDense: true,
                 hintText: '검색어를 입력하세요.',
@@ -34,6 +39,19 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
+      body: ListView.separated(
+          itemBuilder: ((context, index) {
+            return ListTile(
+              title: Text(_searchController.text),
+            );
+          }),
+          separatorBuilder: ((context, index) {
+            return Divider(
+              color: Colors.lightGreen,
+              height: 1,
+            );
+          }),
+          itemCount: 5),
     );
   }
 }
