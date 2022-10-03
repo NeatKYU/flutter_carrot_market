@@ -43,7 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Home'),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.search)),
+          IconButton(
+              onPressed: () {
+                GoRouter.of(context).go('/search');
+              },
+              icon: Icon(CupertinoIcons.search)),
           IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.text_justify)),
           IconButton(
             onPressed: () {

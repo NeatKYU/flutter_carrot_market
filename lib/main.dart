@@ -5,6 +5,7 @@ import 'package:carrot_market_by_flutter/screens/chat/chatroom_screen.dart';
 import 'package:carrot_market_by_flutter/screens/input/category_input_screen.dart';
 import 'package:carrot_market_by_flutter/screens/input/input_sreen.dart';
 import 'package:carrot_market_by_flutter/screens/item/item_detail_screen.dart';
+import 'package:carrot_market_by_flutter/screens/search/serach_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -150,6 +151,12 @@ class Router extends StatelessWidget {
             path: 'item/:item_key/:chatroom_key',
             builder: (BuildContext context, GoRouterState state) {
               return ChatroomScreen(state.params['chatroom_key']!);
+            },
+          ),
+          GoRoute(
+            path: 'search',
+            builder: (BuildContext context, GoRouterState state) {
+              return SearchScreen();
             },
           ),
         ],
