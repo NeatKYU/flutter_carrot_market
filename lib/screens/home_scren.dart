@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: _bottomNaviIndex,
         children: [
-          ItemsPage(),
+          ItemsPage(userKey: context.read<UserProvider>().userModel!.userKey),
           MapPage(context.read<UserProvider>().userModel!),
           ChatListScreen(
             userKey: context.read<UserProvider>().userModel!.userKey,

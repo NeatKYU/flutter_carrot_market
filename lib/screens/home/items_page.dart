@@ -1,15 +1,19 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
+import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
+import 'package:carrot_market_by_flutter/provider/user_provider.dart';
 import 'package:carrot_market_by_flutter/repo/item_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../model/item_model/item_model.dart';
 
 class ItemsPage extends StatefulWidget {
-  const ItemsPage({Key? key}) : super(key: key);
+  final String userKey;
+  const ItemsPage({Key? key, required this.userKey}) : super(key: key);
 
   @override
   State<ItemsPage> createState() => _ItemsPageState();
@@ -46,12 +50,13 @@ class _ItemsPageState extends State<ItemsPage> {
 
   Future _onRefresh() async {
     _items.clear();
-    _items.addAll(await ItemService().getItemList());
+    _items.addAll(await ItemService().getItemList(widget.userKey));
     setState(() {});
   }
 
   // 원래 보여줘야할 리스트
   Widget _listView(double imageSize) {
+    UserModel? userModel = context.read<UserProvider>().userModel;
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.separated(
