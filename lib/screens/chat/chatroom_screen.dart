@@ -1,5 +1,6 @@
 import 'package:carrot_market_by_flutter/constants/common_size.dart';
 import 'package:carrot_market_by_flutter/model/chat_model/chat_model.dart';
+import 'package:carrot_market_by_flutter/model/chatroom_model/chatroom_model.dart';
 import 'package:carrot_market_by_flutter/model/user_model/user_model.dart';
 import 'package:carrot_market_by_flutter/provider/chat_provider.dart';
 import 'package:carrot_market_by_flutter/provider/user_provider.dart';
@@ -8,6 +9,8 @@ import 'package:carrot_market_by_flutter/widgets/chat.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class ChatroomScreen extends StatefulWidget {
   String chatroomKey;
@@ -36,6 +39,8 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
       value: _chatProvider,
       child: Consumer<ChatProvider>(
         builder: (context, chatProvider, child) {
+          ChatroomModel? chatroomModel =
+              context.read<ChatProvider>().chatroomModel;
           return Scaffold(
             appBar: AppBar(
               title: Text('chat room'),
@@ -45,17 +50,25 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    leading: ExtendedImage.network(
-                      'https://picsum.photos/50',
-                      fit: BoxFit.cover,
-                      shape: BoxShape.rectangle,
-                    ),
+                    leading: chatroomModel == null
+                        ? Shimmer.fromColors(
+                            child: Container(width: 32, height: 32),
+                            baseColor: Colors.grey,
+                            highlightColor: Colors.white)
+                        : ExtendedImage.network(
+                            chatroomModel!.itemImage,
+                            fit: BoxFit.cover,
+                            shape: BoxShape.rectangle,
+                          ),
                     title: RichText(
                       text: TextSpan(
                         style: TextStyle(color: Colors.black),
                         children: [
                           TextSpan(text: '거래완료'),
-                          TextSpan(text: ' 거래 제목~'),
+                          TextSpan(
+                              text: chatroomModel == null
+                                  ? ''
+                                  : chatroomModel.itemTitle),
                         ],
                       ),
                     ),
@@ -63,7 +76,14 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                       text: TextSpan(
                         style: TextStyle(color: Colors.black),
                         children: [
-                          TextSpan(text: '30000원'),
+                          TextSpan(
+                            text: chatroomModel == null
+                                ? ''
+                                : chatroomModel.itemPrice.toCurrencyString(
+                                    mantissaLength: 0,
+                                    trailingSymbol: '원',
+                                  ),
+                          ),
                           TextSpan(text: ' (가격제안불가)'),
                         ],
                       ),

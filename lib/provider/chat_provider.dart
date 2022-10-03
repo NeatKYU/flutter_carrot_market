@@ -4,8 +4,8 @@ import 'package:carrot_market_by_flutter/repo/chat_service.dart';
 import 'package:flutter/material.dart';
 
 class ChatProvider extends ChangeNotifier {
-  late ChatroomModel _chatroomModel;
-  late String _chatroomKey;
+  ChatroomModel? _chatroomModel;
+  final String _chatroomKey;
   List<ChatModel> _chatList = [];
 
   ChatProvider(this._chatroomKey) {
@@ -41,6 +41,6 @@ class ChatProvider extends ChangeNotifier {
   }
 
   List<ChatModel> get chatList => _chatList;
-  ChatroomModel get chatroomModel => _chatroomModel;
+  ChatroomModel? get chatroomModel => _chatroomModel;
   String get chatroomKey => _chatroomKey;
 }
